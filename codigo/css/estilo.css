@@ -1,0 +1,26 @@
+*{
+	margin:0 auto;
+	padding:0;
+	border:0;
+	width:800px;
+  	height:640px;
+  	position: relative;
+}
+body{
+	background-color: #000;
+}
+
+@font-face{
+	font-family: emulogic;
+	src: url('emulogic.ttf');
+}
+
+.hidden{
+	font-family: emulogic;
+	visibility: hidden;
+	position: absolute;
+}
+
+canvas{
+	image-rendering: pixelated;
+}
