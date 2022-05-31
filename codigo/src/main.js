@@ -2,16 +2,12 @@ import { AssetsManager } from "./AssetsManager.js";
 import { GameMap } from "./GameMap.js";
 import { Scene } from "./Scene.js";
 import { Sprite } from "./Sprite.js";
+import { niveis } from "../mapas/niveis.js";
 
 //assets gerais: sprites, musicas, etc
 var assetsMng = new AssetsManager();
 assetsMng.loadImage("bear", "./assets/bear.png");
 assetsMng.loadImage("charger", "./assets/charger.png");
-
-//assets de mapas
-var mapAssets = new AssetsManager();
-mapAssets.loadImage("background1", "./assets/toyroom.png");
-mapAssets.loadImage("voidtile", "./assets/voidtile.png");
 
 var canvas = document.querySelector("canvas");
 canvas.width = 800;
@@ -25,40 +21,6 @@ var keys = {
   arrowDown: 0,
   space: 0,
 };
-
-//MAPAS
-
-var gameMaps = [];
-var map0 = new GameMap({
-  mapAssets: mapAssets,
-  mapindice: 0,
-  COLUMNS: 25,
-  LINES: 20,
-  m: [
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  ],
-});
-map0.assets = mapAssets;
-gameMaps.push(map0);
 
 ///COMPORTAMENTOS
 const playerController = keys => {
@@ -81,35 +43,6 @@ const playerController = keys => {
     }
     if (keys.arrowUp === keys.arrowDown) {
       this.ay = 0;
-    }
-    if (keys.space && this.cooldown <= 0 && this.dialogo <= 0) {
-      if (this.side <= 0.5) {
-        var shoot = new Sprite({
-          side: 0,
-          x: this.x - 48,
-          y: this.y - 8,
-          ax: -1,
-          vx: -600,
-          width: 24,
-          h: 24,
-          props: { tipo: "shoot" },
-        });
-        this.scene.addSprite(shoot);
-        this.cooldown = 0.25;
-      } else {
-        var shoot = new Sprite({
-          side: 1,
-          x: this.x + 48,
-          y: this.y - 8,
-          ax: 1,
-          vx: 600,
-          width: 24,
-          h: 24,
-          props: { tipo: "shoot" },
-        });
-        this.scene.addSprite(shoot);
-        this.cooldown = 0.25;
-      }
     }
   };
 };
@@ -136,7 +69,7 @@ var pc = new Sprite({
   x: 120,
   y: 440,
   width: 24,
-  h: 24,
+  height: 24,
   vx: 20,
   vy: 20,
   behave: playerController(keys),
@@ -148,8 +81,7 @@ var gameScene = new Scene({
   width: canvas.width,
   height: canvas.height,
   assets: assetsMng,
-  map: gameMaps,
-  mapAssets,
+  map: niveis,
   pc: pc,
 });
 
@@ -163,14 +95,12 @@ addEventListener("keydown", e => {
       break;
     case "ArrowLeft":
       keys.arrowLeft = 1;
-      // this.lado = 0;
       break;
     case "ArrowUp":
       keys.arrowUp = 1;
       break;
     case "ArrowRight":
       keys.arrowRight = 1;
-      // this.lado = 1;
       break;
     case "ArrowDown":
       keys.arrowDown = 1;
@@ -200,14 +130,17 @@ addEventListener("keyup", e => {
 
 const render = t => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // ctx.save();
+  ctx.save();
+  ctx.scale(2,2);
+  ctx.translate(canvas.width/4-pc.x,canvas.height/4-pc.y)
+
   dt = (t - previousTime) / 1000;
   if (assetsMng.progress() >= 100) {
     gameScene.step(dt);
   }
   previousTime = t;
   requestAnimationFrame(render);
-  // ctx.restore();
+  ctx.restore();
 };
 
 let previousTime = 0;

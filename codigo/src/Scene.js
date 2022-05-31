@@ -4,17 +4,13 @@ export class Scene {
       sprites: [],
       toRemove: [],
       ctx: null,
-      // WARN: width e height pode dar merda segundo Knop
       width: 300,
       height: 300,
       assets: null,
       map: null,
       mapindice: 0,
-      mapAssets: null,
       teleportes: 0,
       set: 0,
-      // FIX: isso provavelmente não era pra estar aqui
-      pc: null,
     };
     Object.assign(this, defaultParams, params);
   }
@@ -25,25 +21,7 @@ export class Scene {
   }
 
   drawBackground() {
-    this.map.push(this.map[this.mapindice]);
-    switch (this.map[this.mapindice].mapindice) {
-      case 0:
-        // 4 primeiros parametros são relativos à imagem
-        // 4 últimos relativos ao canvas
-        this.ctx.drawImage(
-          this.mapAssets.image("background1"),
-          0,
-          0,
-          800,
-          640,
-          0,
-          0,
-          // WARN: antes tava como canvas.width e canvas.height
-          this.width,
-          this.height
-        );
-        break;
-    }
+    this.map[this.mapindice].drawBackground(this.ctx)
   }
 
   drawMapa() {

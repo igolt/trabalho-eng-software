@@ -7,7 +7,7 @@ export class Sprite {
       vy: 0,
       ax: 0,
       ay: 0,
-      h: 10,
+      height: 10,
       width: 10,
       a: 0,
       va: 0,
@@ -47,25 +47,30 @@ export class Sprite {
 
     //pc
     if (this.props.tipo === "pc") {
+
+      //WARN: for collision tests
+      //ctx.fillStyle = "black";
+      //ctx.fillRect(0, 0, this.width, this.height);
       ctx.drawImage(
         this.scene.assets.image("bear"),
         (F % 2) * 16 + this.modelo * 32,
         Math.floor(this.side) * 16 + this.shadow * 32,
         16,
         16,
-        -this.width / 2,
-        -this.h / 2,
+        0,
+        0,
         this.width,
-        this.h
+        this.height
       );
       //vida
       ctx.fillStyle = "red";
-      ctx.fillRect(-this.vida / 8, 16, this.vida / 4, 2);
+      ctx.fillRect(-this.vida / 16, 32, this.vida / 4, 2);
       ctx.fillStyle = "black";
       ctx.font = "16px bold Aldrich";
-      ctx.fillText(this.vida, -this.vida / 8, 16, this.vida / 4, 2);
-    } else if (this.props.tipo === "enemy") {
-      ctx.fillRect(0, 0, 32, 32);
+      ctx.fillText(this.vida, -this.vida / 16, 32, this.vida / 4, 2);
+    }
+    else if (this.props.tipo === "enemy") {
+      ctx.fillRect(0, 0, this.width, this.height);
       ctx.drawImage(
         this.scene.assets.image("charger"),
         (F % 2) * 32,
@@ -73,9 +78,9 @@ export class Sprite {
         32,
         32,
         -this.width / 2,
-        -this.h,
+        -this.height,
         this.width * 2,
-        this.h * 2
+        this.height * 2
       );
       ctx.fillStyle = "darkred";
       ctx.fillRect(-this.vida / 2, 48, this.vida, 4);
@@ -90,84 +95,80 @@ export class Sprite {
     if (this.props.tipo != "pc") this.vy = this.vy + this.ay * dt + 980 * dt;
     else this.vy = this.vy + 980 * dt;
 
-    this.mc = Math.floor(this.x / this.scene.map[this.scene.mapindice].SIZE);
-    this.ml = Math.floor(this.y / this.scene.map[this.scene.mapindice].SIZE);
-
+    //calcula o indice atual na matriz baseado na posição atual do sprite
+    this.mapCurrentIndexX = Math.floor(this.x / this.scene.map[this.scene.mapindice].SIZE);
+    this.mapCurrentIndexY = Math.floor(this.y / this.scene.map[this.scene.mapindice].SIZE);
     this.applyMapRestrictions(dt);
     this.cooldown = this.cooldown - dt;
   }
 
   applyMapRestrictions(dt) {
+
+    //direção e tamanho do passo
     let dx = this.vx * dt;
-    let dnx = dx;
     let dy = this.vy * dt;
-    let dny = dy;
 
-    if (
-      dx > 0 &&
-      this.scene.map[this.scene.mapindice].cells[this.mc + 1][this.ml].tipo != 0
-    ) {
-      dnx =
-        this.scene.map[this.scene.mapindice].SIZE * (this.mc + 1) -
-        (this.x + this.width / 2);
-      dx = Math.min(dnx, dx);
+    //direnção e tamanho do next passo
+    let dNextX = dx;
+    let dNextY = dy;
+
+    //próxima cell em X
+    let proxCellX = this.scene.map[this.scene.mapindice].cells[this.mapCurrentIndexX + 1][this.mapCurrentIndexY].tipo;
+    //anterior cell em X
+    let antCellX = this.scene.map[this.scene.mapindice].cells[this.mapCurrentIndexX - 1][this.mapCurrentIndexY].tipo;
+    //próxima cell em Y
+    let proxCellY =  this.scene.map[this.scene.mapindice].cells[this.mapCurrentIndexX][this.mapCurrentIndexY + 1].tipo;
+    //anterior cell em Y
+    let antCellY = this.scene.map[this.scene.mapindice].cells[this.mapCurrentIndexX][this.mapCurrentIndexY - 1].tipo;
+
+    //indo direita
+    if (dx > 0 && proxCellX != 0) {
+      if(proxCellX == 2){
+        this.scene.mapindice++;
+        this.x = this.scene.map[this.scene.mapindice].SIZE * 3
+      }
+      //força o sprite a retornar pra esquerda
+      dNextX = this.scene.map[this.scene.mapindice].SIZE * (this.mapCurrentIndexX + 1) - (this.x + this.width);
+      dx = Math.min(dNextX, dx);
     }
 
-    if (
-      dx < 0 &&
-      this.scene.map[this.scene.mapindice].cells[this.mc - 1][this.ml].tipo != 0
-    ) {
-      dnx =
-        this.scene.map[this.scene.mapindice].SIZE * (this.mc - 1 + 1) -
-        (this.x - this.width / 2);
-      dx = Math.max(dnx, dx);
+    //indo esquerda
+    if (dx < 0 && antCellX != 0) {
+      if(antCellX == 2){
+        this.scene.mapindice--;
+        this.x = this.scene.map[this.scene.mapindice].SIZE * (this.scene.map[this.scene.mapindice].COLUMNS - 3)
+      }
+      //força o sprite a retornar pra direita
+      dNextX = this.scene.map[this.scene.mapindice].SIZE * (this.mapCurrentIndexX) - (this.x);
+      dx = Math.max(dNextX, dx);
     }
-    if (
-      dy > 0 &&
-      this.scene.map[this.scene.mapindice].cells[this.mc][this.ml + 1].tipo != 0
-    ) {
-      dny =
-        this.scene.map[this.scene.mapindice].SIZE * (this.ml + 1) -
-        (this.y + this.h / 2);
-      dy = Math.min(dny, dy);
+
+    //indo baixo
+    if (dy > 0 && proxCellY!= 0) {
+      //força o sprite a retornar pra baixo
+      dNextY = this.scene.map[this.scene.mapindice].SIZE * (this.mapCurrentIndexY + 1) - (this.y + this.height);
+      dy = Math.min(dNextY, dy);
     }
-    if (
-      dy < 0 &&
-      this.scene.map[this.scene.mapindice].cells[this.mc][this.ml - 1].tipo != 0
-    ) {
-      dny =
-        this.scene.map[this.scene.mapindice].SIZE * (this.ml - 1 + 1) -
-        (this.y - this.h / 2);
-      dy = Math.max(dny, dy);
+
+    //indo cima
+    if (dy < 0 && antCellY != 0) {
+      //força o sprite a retornar pra baixo
+      dNextY = this.scene.map[this.scene.mapindice].SIZE * (this.mapCurrentIndexY) - (this.y);
+      dy = Math.max(dNextY, dy);
     }
+
     this.vy = dy / dt;
     this.x = this.x + dx;
     this.y = this.y + dy;
 
-    var MAXX =
-      this.scene.map[this.scene.mapindice].SIZE *
-        this.scene.map[this.scene.mapindice].COLUMNS -
-      this.width / 2;
-    var MAXY =
-      this.scene.map[this.scene.mapindice].SIZE *
-        this.scene.map[this.scene.mapindice].LINES -
-      this.h / 2;
-
-    if (this.x > MAXX) this.x = MAXX;
-    if (this.y > MAXY) {
-      this.y = MAXY;
-      this.vy = 0;
-    }
-    if (this.x - this.width / 2 < 0) this.x = 0 + this.width / 2;
-    if (this.y - this.h / 2 < 0) this.y = 0 + this.h / 2;
   }
 
   checkCollision(alvo) {
     if (alvo.x + alvo.width / 2 < this.x - this.width / 2) return false;
     if (alvo.x - alvo.width / 2 > this.x + this.width / 2) return false;
 
-    if (alvo.y + alvo.h / 2 < this.y - this.h / 2) return false;
-    if (alvo.y - alvo.h / 2 > this.y + this.h / 2) return false;
+    if (alvo.y + alvo.h / 2 < this.y - this.height / 2) return false;
+    if (alvo.y - alvo.h / 2 > this.y + this.height / 2) return false;
 
     return true;
   }

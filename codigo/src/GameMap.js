@@ -6,7 +6,6 @@ export class GameMap {
       COLUMNS: 32,
       SIZE: 32,
       mapindice: [],
-      // FIX: remover isso depois
       mapAssets: null,
     };
     Object.assign(this, exemplo, modelo);
@@ -25,6 +24,20 @@ export class GameMap {
     }
   }
 
+  drawBackground(ctx){
+    ctx.drawImage(
+      this.mapAssets.image("background"),
+      0,
+      0,
+      this.mapAssets.image("background").naturalWidth,
+      this.mapAssets.image("background").naturalHeight,
+      0,
+      0,
+      this.SIZE * this.COLUMNS,
+      this.SIZE * this.LINES
+    );
+  }
+
   draw(ctx) {
     for (var c = 0; c < this.COLUMNS; c++) {
       for (var l = 0; l < this.LINES; l++) {
@@ -32,13 +45,10 @@ export class GameMap {
           //andavel
           case 0:
             break;
-
           //solido
           case 1:
-            break;
-          case 2:
             ctx.drawImage(
-              this.mapAssets.image("voidtile"),
+              this.mapAssets.image("tile"),
               0,
               0,
               16,
@@ -49,6 +59,14 @@ export class GameMap {
               this.SIZE
             );
             break;
+          //teleporte
+          case 2:
+            ctx.fillRect(
+              c * this.SIZE,
+              l * this.SIZE,
+              this.SIZE,
+              this.SIZE
+            );
         }
       }
     }
