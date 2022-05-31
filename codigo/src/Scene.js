@@ -10,8 +10,8 @@ function Scene(params) {
         mapindice: 0,
         teleportes: 0,
         set: 0,
-        map: null,
-        mapindice: 0
+        map: null,// ???
+        mapindice: 0 // ???
     }
     Object.assign(this, exemplo, params);
 }
@@ -46,17 +46,14 @@ Scene.prototype.desenhar = function(){
         this.sprites[i].desenhar(this.ctx);
     }
 };
-Scene.prototype.desenharSprites = function(){
-    this.desenharBackground();
-    this.desenharMapa();
-    this.desenhar();
-}
+
 
 Scene.prototype.mover = function(dt){
     for(var i = 0; i<this.sprites.length; i++){
         this.sprites[i].mover(dt);
     }
 };
+
 Scene.prototype.comportar = function(){
     for(var i = 0; i<this.sprites.length; i++){
         if(this.sprites[i].comportar){
