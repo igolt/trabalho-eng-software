@@ -1,3 +1,5 @@
+import { EnemyDino } from "../sprites/EnemyDino.js";
+
 export class GameMap {
   constructor(modelo) {
     let exemplo = {
@@ -7,6 +9,7 @@ export class GameMap {
       SIZE: 32,
       mapindice: [],
       mapAssets: null,
+      enemies: [],
     };
     Object.assign(this, exemplo, modelo);
     for (var c = 0; c < this.COLUMNS; c++) {
@@ -19,6 +22,29 @@ export class GameMap {
       for (var c = 0; c < this.COLUMNS; c++) {
         for (var l = 0; l < this.LINES; l++) {
           this.cells[c][l] = { tipo: modelo.m[l][c] };
+        }
+      }
+    }
+    this.addMapEnemy();
+  }
+
+  addMapEnemy(c,l){
+    for (var c = 0; c < this.COLUMNS; c++) {
+      for (var l = 0; l < this.LINES; l++) {
+        switch(this.cells[c][l].tipo){
+          case 'ED':
+            let enemy = new EnemyDino({
+              x: c * this.SIZE,
+              y: (l-1) * this.SIZE -5 ,
+              w: 32,
+              h: 32,
+              lado: 0,
+              props: { tipo: "enemyDino" },
+              vida: 5,
+            });
+            console.log(enemy);
+            this.enemies.push(enemy);
+            break;
         }
       }
     }
@@ -38,13 +64,15 @@ export class GameMap {
     );
   }
 
-  draw(ctx) {
+  drawTiles(ctx) {
     for (var c = 0; c < this.COLUMNS; c++) {
       for (var l = 0; l < this.LINES; l++) {
         switch (this.cells[c][l].tipo) {
+
           //andavel
           case 0:
             break;
+
           //solido
           case 1:
             ctx.drawImage(
@@ -59,6 +87,7 @@ export class GameMap {
               this.SIZE
             );
             break;
+
           //teleporte
           case 2:
             ctx.fillRect(
@@ -67,8 +96,28 @@ export class GameMap {
               this.SIZE,
               this.SIZE
             );
+            break;
+
+          default:
+            ctx.drawImage(
+              this.mapAssets.image("tile"),
+              0,
+              0,
+              16,
+              16,
+              c * this.SIZE,
+              l * this.SIZE,
+              this.SIZE,
+              this.SIZE
+            );
+            break;
         }
       }
     }
+  }
+
+  draw(ctx){
+    this.drawBackground(ctx);
+    this.drawTiles(ctx);
   }
 }

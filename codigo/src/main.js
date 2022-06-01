@@ -1,5 +1,5 @@
 import { AssetsManager } from "./AssetsManager.js";
-import { GameMap } from "./GameMap.js";
+import { Player } from "../sprites/Player.js";
 import { Scene } from "./Scene.js";
 import { Sprite } from "./Sprite.js";
 import { niveis } from "../mapas/niveis.js";
@@ -34,12 +34,9 @@ const playerController = keys => {
     if (keys.arrowLeft === keys.arrowRight) {
       this.ax = 0;
     }
-    if (keys.arrowUp && this.cooldown <= 0) {
-      this.cooldown = 1.0;
+    if (keys.arrowUp && this.pulo <= 0) {
+      this.pulo = 1.0;
       this.vy = -500;
-    }
-    if (this.jump >= 0.5) {
-      (this.jump = 0), (this.vy = -800);
     }
     if (keys.arrowUp === keys.arrowDown) {
       this.ay = 0;
@@ -47,27 +44,9 @@ const playerController = keys => {
   };
 };
 
-// TODO: mover isso pra algum lugar
-// const followTarget = target => {
-//   return () => {
-//     if (
-//       Math.sqrt((target.x - this.x) * (target.x - this.x)) +
-//         (target.y - this.y) * (target.y - this.y) <=
-//       200
-//     ) {
-//       if (target.x <= this.x) {
-//         this.lado = 0;
-//       } else {
-//         this.lado = 1;
-//       }
-//       this.ax = 200 * Math.sign(target.x - this.x);
-//     }
-//   };
-// };
-
-var pc = new Sprite({
+var pc = new Player({
   x: 120,
-  y: 440,
+  y: 540,
   width: 24,
   height: 24,
   vx: 20,
@@ -82,7 +61,7 @@ var gameScene = new Scene({
   height: canvas.height,
   assets: assetsMng,
   map: niveis,
-  pc: pc,
+  scenePlayer: pc,
 });
 
 gameScene.addSprite(pc);
@@ -127,6 +106,7 @@ addEventListener("keyup", e => {
       break;
   }
 });
+
 
 const render = t => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);

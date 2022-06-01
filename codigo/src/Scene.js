@@ -11,20 +11,30 @@ export class Scene {
       mapindice: 0,
       teleportes: 0,
       set: 0,
+      scenePlayer: null
     };
     Object.assign(this, defaultParams, params);
   }
 
   addSprite(sprite) {
-    this.sprites.push(sprite);
     sprite.setScene(this);
+    this.sprites.push(sprite);
   }
 
-  drawBackground() {
-    this.map[this.mapindice].drawBackground(this.ctx)
+  addEnemySprites(enemysprite) {
+    for (var i = 0; i < enemysprite.length; i++) {
+      enemysprite[i].setNewTarget(this.scenePlayer);
+      enemysprite[i].setScene(this);
+      this.sprites.push(enemysprite[i]);
+    }
+    console.log(this.sprites)
   }
 
   drawMapa() {
+    if(this.set != 1){
+      this.addEnemySprites(this.map[this.mapindice].enemies)
+      this.set = 1;
+    }
     this.map[this.mapindice].draw(this.ctx);
   }
 
@@ -35,7 +45,6 @@ export class Scene {
   }
 
   drawSprites() {
-    this.drawBackground();
     this.drawMapa();
     this.draw();
   }
@@ -54,11 +63,6 @@ export class Scene {
     }
   }
 
-  clearScene() {
-    this.ctx.save();
-    this.ctx.clearRect(0, 0, this.width, this.h);
-  }
-
   checkCollision() {
     for (var i = 0; i < this.sprites.length; i++) {
       if (this.sprites[i].vida <= 0) {
@@ -66,7 +70,12 @@ export class Scene {
       }
       for (var j = i + 1; j < this.sprites.length; j++) {
         if (this.sprites[i].checkCollision(this.sprites[j])) {
-          console.log("colidiu");
+          if(this.sprites[i].props.tipo === "pc" && this.sprites[i].hitCooldown <= 0){
+            console.log(this.sprites[i].hitCooldown)
+            this.sprites[i].vida--;
+            this.sprites[i].hitCooldown = 3;
+            console.log("colidiu");
+          }
         }
       }
     }
@@ -82,20 +91,7 @@ export class Scene {
     this.toRemove = [];
   }
 
-  // WARN: Esse método não está sendo chamado
-  limpezaSprites() {
-    for (var i = 0; i < this.sprites.length; i++) {
-      if (
-        this.sprites[i].props.tipo != "pc" &&
-        this.sprites[i].props.tipo != "bearrider"
-      ) {
-        this.toRemove.push(this.sprites[i]);
-      }
-    }
-  }
-
   step(dt) {
-    // this.clearScene();
     this.drawSprites();
     this.behave();
     this.move(dt);
