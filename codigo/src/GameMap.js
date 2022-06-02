@@ -1,4 +1,5 @@
 import { EnemyDino } from "../sprites/EnemyDino.js";
+import { QuestionManager } from "./QuestionManager.js";
 
 export class GameMap {
   constructor(modelo) {
@@ -42,7 +43,6 @@ export class GameMap {
               props: { tipo: "enemyDino" },
               vida: 5,
             });
-            console.log(enemy);
             this.enemies.push(enemy);
             break;
         }
@@ -120,4 +120,5 @@ export class GameMap {
     this.drawBackground(ctx);
     this.drawTiles(ctx);
   }
+
 }

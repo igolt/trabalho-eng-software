@@ -1,3 +1,4 @@
+import { QuestionManager } from "./QuestionManager.js";
 export class Scene {
   constructor(params = {}) {
     let defaultParams = {
@@ -10,10 +11,13 @@ export class Scene {
       map: null,
       mapindice: 0,
       teleportes: 0,
+      questions: [],
       set: 0,
-      scenePlayer: null
+      scenePlayer: null,
+      questionsMng: new QuestionManager()
     };
     Object.assign(this, defaultParams, params);
+
   }
 
   addSprite(sprite) {
@@ -27,14 +31,25 @@ export class Scene {
       enemysprite[i].setScene(this);
       this.sprites.push(enemysprite[i]);
     }
-    console.log(this.sprites)
   }
 
-  drawMapa() {
+  loadQuestions() {
+    this.questionsMng.lerPergunta();
+    let questao = this.questionsMng.perguntas[this.mapindice].descricao;
+    var divQuestion = document.getElementById("question");
+    divQuestion.innerHTML = questao;
+  }
+
+  setScenario(){
     if(this.set != 1){
       this.addEnemySprites(this.map[this.mapindice].enemies)
+      this.loadQuestions();
       this.set = 1;
     }
+  }
+
+  drawScenario() {
+    this.setScenario();
     this.map[this.mapindice].draw(this.ctx);
   }
 
@@ -45,7 +60,7 @@ export class Scene {
   }
 
   drawSprites() {
-    this.drawMapa();
+    this.drawScenario();
     this.draw();
   }
 
