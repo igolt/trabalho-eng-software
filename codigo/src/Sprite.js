@@ -81,6 +81,12 @@ export class Sprite {
     //anterior cell em Y
     let antCellY = this.scene.map[this.scene.mapindice].cells[this.mapCurrentIndexX][this.mapCurrentIndexY - 1].tipo;
 
+    //WARN: mudar depois
+    if( (proxCellX === 3 || antCellX === 3) && this.hitCooldown <= 0){
+      this.vida--;
+      this.hitCooldown = 3;
+    }
+
     //indo direita
     if (dx > 0 && proxCellX != 0) {
       if(proxCellX == 2){

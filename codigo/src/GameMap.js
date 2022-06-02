@@ -90,13 +90,36 @@ export class GameMap {
 
           //teleporte
           case 2:
+            ctx.fillStyle = '#00ff00';
             ctx.fillRect(
               c * this.SIZE,
               l * this.SIZE,
               this.SIZE,
               this.SIZE
             );
+            ctx.fillStyle = '#000000';
+            ctx.fillText(
+              'V',
+              c * this.SIZE + this.SIZE/2,
+              l * this.SIZE + this.SIZE/2,
+            );
             break;
+
+          case 3:
+              ctx.fillStyle = '#ff0000';
+              ctx.fillRect(
+                c * this.SIZE,
+                l * this.SIZE,
+                this.SIZE,
+                this.SIZE
+              );
+              ctx.fillStyle = '#000000';
+              ctx.fillText(
+                'F',
+                c * this.SIZE + this.SIZE/2,
+                l * this.SIZE + this.SIZE/2,
+              );
+              break;
 
           default:
             ctx.drawImage(

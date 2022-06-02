@@ -14,8 +14,8 @@ export class QuestionManager {
         this.perguntas[0].setPergunta(descricao, 0, 'ENCAPSULAMENTO', 'VF', 'V');
 
         this.perguntas.push(new Question());
-        var descricao = 'SUPERCLASSE É UMA ESPECIALIZAÇÃO DE UM CONJUNTO DE CLASSES ATRAVÉS DA HERANÇA';
-        this.perguntas[1].setPergunta(descricao, 0, 'HERANÇA', 'VF', 'F');
+        var descricao = 'SUPERCLASSE É UMA GENERALIZAÇÃO DE UM CONJUNTO DE CLASSES ATRAVÉS DA HERANÇA';
+        this.perguntas[1].setPergunta(descricao, 0, 'HERANÇA', 'VF', 'V');
 
         this.perguntas.push(new Question());
         var descricao = 'OBJETOS SÃO INSTÂNCIAS DE UMA CLASSE QUE POSSUI OS ATRIBUTOS E AS OPERAÇÕES DEFINIDOS NA CLASSE';

@@ -33,7 +33,7 @@ body {
 
 .questionHolder{
   width: 300px;
-  height: 300px;
+  height: auto;
   overflow-wrap: anywhere;
 
   position: relative;
@@ -42,8 +42,9 @@ body {
   text-align: center;
   vertical-align: middle;
 
-  margin: auto;
-  padding: auto;
+  margin: 10px;
+  padding: 10px;
+
 
   background-image: url("../assets/backgroundCSS.jpg");
   border: 20px inset #A52A2A;
