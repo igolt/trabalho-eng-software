@@ -1,0 +1,11 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')     
+  body
+    script(src="/javascripts/main/main.js" type="module")
+    script(type="module").
+      import { jogar } from "/javascripts/main/main.js"
+      jogar()
+    block content
