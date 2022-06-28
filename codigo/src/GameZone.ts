@@ -36,14 +36,11 @@ export interface IZone {
 
 const validateZone = (_: any): _ is IZone => true;
 
-export const requestZoneFromJSON = (
-  url: URLType,
-  callback: (zone: IZone) => void
-) => {
-  requestJSON(url, (zone) => {
-    // TODO: validate zone
-    if (validateZone(zone)) {
-      callback(zone);
-    }
-  });
+export const requestZoneFromJSON = async (url: URLType): Promise<IZone> => {
+  const zone = await requestJSON(url);
+
+  if (validateZone(zone)) {
+    return zone;
+  }
+  throw Error("requestZoneFromJSON: invalid JSON format for zone.");
 };

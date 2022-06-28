@@ -135,15 +135,14 @@ window.addEventListener("load", () => {
       engine.stop();
 
       requestZoneFromJSON(
-        ZONE_PREFIX + door.destinationZone + ZONE_SUFFIX,
-        (zone) => {
-          gameWorld.setup(zone);
+        ZONE_PREFIX + door.destinationZone + ZONE_SUFFIX
+      ).then(zone => {
+        gameWorld.setup(zone);
 
-          movePlayerToDoorDestination(door);
+        movePlayerToDoorDestination(door);
 
-          engine.start();
-        }
-      );
+        engine.start();
+      });
     }
   };
 
@@ -171,16 +170,18 @@ window.addEventListener("load", () => {
   display.setBufferCanvasWidth(gameWorld.width());
   display.disableImageSmoothing();
 
-  requestZoneFromJSON(ZONE_PREFIX + INITIAL_ZONE_ID + ZONE_SUFFIX, (zone) => {
-    gameWorld.setup(zone);
-    gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
-    gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
+  requestZoneFromJSON(ZONE_PREFIX + INITIAL_ZONE_ID + ZONE_SUFFIX).then(
+    zone => {
+      gameWorld.setup(zone);
+      gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
+      gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
 
-    requestImage("rabbit-trap.png", (image) => {
-      tileSetImage = image;
+      requestImage("rabbit-trap.png").then(image => {
+        tileSetImage = image;
 
-      resize();
-      engine.start();
-    });
-  });
+        resize();
+        engine.start();
+      });
+    }
+  );
 });

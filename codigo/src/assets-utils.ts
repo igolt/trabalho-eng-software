@@ -1,28 +1,20 @@
-type RequestJSONCallback = (param: any) => void;
-type RequestImageCallback = (image: HTMLImageElement) => void;
+const REQUEST_OPTS = { once: true };
 
-export const requestJSON = (
-  url: string | URL,
-  callback: RequestJSONCallback
-) => {
-  const request = new XMLHttpRequest();
+export const requestJSON = (url: string | URL) =>
+  new Promise(resolve => {
+    const request = new XMLHttpRequest();
+    const callback = () => resolve(JSON.parse(request.responseText));
 
-  request.addEventListener(
-    "load",
-    function () {
-      callback(JSON.parse(this.responseText));
-    },
-    { once: true }
-  );
+    request.addEventListener("load", callback, REQUEST_OPTS);
+    request.open("GET", url);
+    request.send();
+  });
 
-  request.open("GET", url);
-  request.send();
-};
+export const requestImage = (url: string) =>
+  new Promise<HTMLImageElement>(resolve => {
+    const image = new Image();
+    const callback = () => resolve(image);
 
-export const requestImage = (url: string, callback: RequestImageCallback) => {
-  const image = new Image();
-
-  image.addEventListener("load", () => callback(image), { once: true });
-
-  image.src = url;
-};
+    image.addEventListener("load", callback, REQUEST_OPTS);
+    image.src = url;
+  });
