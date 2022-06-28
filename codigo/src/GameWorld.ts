@@ -117,7 +117,7 @@ export class GameWorld {
       );
     });
 
-    zone.grass.forEach((grassInfo) => {
+    zone.grass.forEach(grassInfo => {
       this._grass.push(
         new Grass(
           grassInfo[0] * this.tileSize(),
@@ -131,12 +131,12 @@ export class GameWorld {
     if (this.zone) {
       return this.zone.collisionMap[idx];
     }
-    throw Error("zone does not exist");
+    throw new Error("zone does not exist");
   }
 
   public collideObject(object: MovableGameObject) {
     if (!this.zone) {
-      throw Error("this.zone is undefined");
+      throw new Error("this.zone is undefined");
     }
     let bottom: number, left: number, right: number, top: number, value: number;
     const zone = this.zone;
@@ -230,10 +230,10 @@ export class GameWorld {
   }
 
   public zoneId(): string {
-    if (!this.zone) {
-      throw Error("zone is undefined");
+    if (this.zone) {
+      return this.zone.id;
     }
-    return this.zone.id;
+    throw new Error("zone is undefined");
   }
 
   public height(): number {
@@ -258,10 +258,10 @@ export class GameWorld {
   }
 
   public graphicalMap() {
-    if (!this.zone) {
-      throw Error("zone undefined");
+    if (this.zone) {
+      return this.zone.graphicalMap;
     }
-    return this.zone.graphicalMap;
+    throw new Error("zone undefined");
   }
 
   public carrots() {

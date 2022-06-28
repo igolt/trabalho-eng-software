@@ -12,7 +12,7 @@ export class Display {
     const context = canvas.getContext("2d");
 
     if (buffer === null || context === null) {
-      throw Error("Could not create buffer or context");
+      throw new Error("Could not create buffer or context");
     }
     this.buffer = buffer;
     this.context = context;

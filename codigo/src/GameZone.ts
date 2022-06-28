@@ -42,5 +42,5 @@ export const requestZoneFromJSON = async (url: URLType): Promise<IZone> => {
   if (validateZone(zone)) {
     return zone;
   }
-  throw Error("requestZoneFromJSON: invalid JSON format for zone.");
+  throw new Error("requestZoneFromJSON: invalid JSON format for zone.");
 };
