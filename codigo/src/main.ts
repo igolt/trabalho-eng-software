@@ -29,9 +29,9 @@ window.addEventListener("load", () => {
 
     const rectangle = display.getBoundingClientRect();
 
-    p.style.left = rectangle.left + "px";
-    p.style.top = rectangle.top + "px";
-    p.style.fontSize =
+    pStats.style.left = rectangle.left + "px";
+    pStats.style.top = rectangle.top + "px";
+    pStats.style.fontSize =
       (gameWorld.tileSize() * rectangle.height) / gameWorld.height() + "px";
   };
 
@@ -96,7 +96,7 @@ window.addEventListener("load", () => {
   };
 
   const carrotCollisionListener = () =>
-    (p.innerHTML = "Carrots: " + gameWorld.carrotsCount());
+    (pStats.innerHTML = "Apples: " + gameWorld.carrotsCount());
 
   const playerController = () => {
     if (controller.left.isDown()) {
@@ -157,10 +157,13 @@ window.addEventListener("load", () => {
 
   let tileSetImage: HTMLImageElement;
 
-  const p = document.createElement("p");
-  p.setAttribute("style", "color:#c07000; font-size:2.0em; position:fixed;");
-  p.innerHTML = "Carrots: 0";
-  document.body.appendChild(p);
+  const pStats = document.createElement("pStats");
+  pStats.setAttribute(
+    "style",
+    "color:#ffffff; font-size:2.0em; position:fixed"
+  );
+  pStats.innerHTML = "Apples: 0";
+  document.body.appendChild(pStats);
 
   ////////////////////
   //// INITIALIZE ////
@@ -176,7 +179,7 @@ window.addEventListener("load", () => {
       gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
       gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
 
-      requestImage("rabbit-trap.png").then(image => {
+      requestImage("sprite_sheets/rabbit-trap3.png").then(image => {
         tileSetImage = image;
 
         resize();

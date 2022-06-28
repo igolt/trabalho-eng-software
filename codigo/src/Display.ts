@@ -29,9 +29,9 @@ export class Display {
   ) {
     map.forEach((value, index) => {
       const sourceX = (value % imageColums) * tileSize;
-      const sourceY = Math.floor(value / imageRows) * tileSize;
+      const sourceY = Math.floor(value / imageColums) * tileSize;
       const destinationX = (index % mapColumns) * tileSize;
-      const destinationY = Math.floor(index / mapRows) * tileSize;
+      const destinationY = Math.floor(index / mapColumns) * tileSize;
 
       this.buffer.drawImage(
         image,
