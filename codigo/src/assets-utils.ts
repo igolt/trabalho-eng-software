@@ -10,11 +10,17 @@ export const requestJSON = (url: string | URL) =>
     request.send();
   });
 
-export const requestImage = (url: string) =>
+export const requestImage = (url: string | URL) =>
   new Promise<HTMLImageElement>(resolve => {
     const image = new Image();
     const callback = () => resolve(image);
 
     image.addEventListener("load", callback, REQUEST_OPTS);
-    image.src = url;
+    image.src = typeof url == "string" ? url : url.toString();
   });
+
+export const loadAudio = (url: string | URL) => {
+  const audio = new Audio(typeof url == "string" ? url : url.toString());
+  audio.load();
+  return audio;
+};
