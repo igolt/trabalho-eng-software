@@ -6,7 +6,8 @@
   "author": "Igor Correa Rodrigues <igorcorrearodrigues@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack serve"
+    "dev": "webpack serve",
+    "build": "webpack"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
