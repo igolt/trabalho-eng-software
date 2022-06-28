@@ -173,6 +173,8 @@ window.addEventListener("load", () => {
   display.setBufferCanvasWidth(gameWorld.width());
   display.disableImageSmoothing();
 
+  window.addEventListener("resize", resize);
+
   requestZoneFromJSON(ZONE_PREFIX + INITIAL_ZONE_ID + ZONE_SUFFIX).then(
     zone => {
       gameWorld.setup(zone);
