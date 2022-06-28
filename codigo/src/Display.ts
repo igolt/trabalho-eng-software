@@ -44,7 +44,7 @@ export class Display {
         tileSize,
         tileSize
       );
-    })
+    });
   }
 
   public drawObject(

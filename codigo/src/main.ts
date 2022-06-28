@@ -5,14 +5,13 @@ import { Controller } from "./Controller";
 import { requestImage } from "./assets-utils";
 import { requestZoneFromJSON } from "./GameZone";
 import { Door } from "./Door";
+import { AssetsManager } from "./AssetsManager";
 
 window.addEventListener("load", () => {
   "use strict";
 
   //// CONSTANTS ////
 
-  const ZONE_PREFIX = "../zones/zone";
-  const ZONE_SUFFIX = ".json";
   const INITIAL_ZONE_ID = "00";
 
   ///////////////////
@@ -134,9 +133,7 @@ window.addEventListener("load", () => {
     } else {
       engine.stop();
 
-      requestZoneFromJSON(
-        ZONE_PREFIX + door.destinationZone + ZONE_SUFFIX
-      ).then(zone => {
+      requestZoneFromJSON(assetsManager, door.destinationZone).then(zone => {
         gameWorld.setup(zone);
 
         movePlayerToDoorDestination(door);
@@ -154,6 +151,7 @@ window.addEventListener("load", () => {
   const display = new Display();
   const gameWorld = new GameWorld();
   const engine = new Engine(1000 / 30, render, update);
+  const assetsManager = new AssetsManager();
 
   let tileSetImage: HTMLImageElement;
 
@@ -175,18 +173,16 @@ window.addEventListener("load", () => {
 
   window.addEventListener("resize", resize);
 
-  requestZoneFromJSON(ZONE_PREFIX + INITIAL_ZONE_ID + ZONE_SUFFIX).then(
-    zone => {
-      gameWorld.setup(zone);
-      gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
-      gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
+  requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(zone => {
+    gameWorld.setup(zone);
+    gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
+    gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
 
-      requestImage("sprite_sheets/rabbit-trap3.png").then(image => {
-        tileSetImage = image;
+    requestImage("sprite_sheets/rabbit-trap3.png").then(image => {
+      tileSetImage = image;
 
-        resize();
-        engine.start();
-      });
-    }
-  );
+      resize();
+      engine.start();
+    });
+  });
 });

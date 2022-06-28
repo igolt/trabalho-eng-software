@@ -5,6 +5,19 @@ interface Channel {
   end: number;
 }
 
+async function _loadTemplate<T>(
+  assetsMap: Map<string, T>,
+  key: string,
+  url: string | URL,
+  loadFn: (url: string | URL) => Promise<T>
+) {
+  const asset = await loadFn(url);
+
+  assetsMap.set(key, asset);
+
+  return asset;
+}
+
 // NOTE(igolt): lógica de channels/play de áudio deve ser algo separado do AssetsManager
 export class AssetsManager {
   private _loadedImages: Map<string, HTMLImageElement>;
@@ -17,7 +30,7 @@ export class AssetsManager {
     this._channels = [];
     this._loadedImages = new Map<string, HTMLImageElement>();
     this._loadedAudios = new Map<string, HTMLAudioElement>();
-    this._loadedJsons = new Map<string, any>
+    this._loadedJsons = new Map<string, any>();
 
     for (let i = 0; i < AssetsManager.MAX_CHANNELS; i++) {
       this._channels[i] = {
@@ -28,11 +41,7 @@ export class AssetsManager {
   }
 
   public async loadImage(key: string, url: string | URL) {
-    const image = await requestImage(url);
-
-    this._loadedImages.set(key, image);
-
-    return image;
+    return _loadTemplate(this._loadedImages, key, url, requestImage);
   }
 
   private _getImage(key: string) {
@@ -72,7 +81,6 @@ export class AssetsManager {
     );
   }
 
-
   private _play(audio: HTMLAudioElement) {
     for (let i = 0; i < AssetsManager.MAX_CHANNELS; i++) {
       const now = new Date();
@@ -91,11 +99,7 @@ export class AssetsManager {
   }
 
   public async loadJSON(key: string, url: string | URL) {
-    const json = await requestJSON(url);
-
-    this._loadedJsons.set(key, json);
-
-    return json;
+    return await _loadTemplate(this._loadedJsons, key, url, requestJSON);
   }
 
   private _getJSON(key: string) {
@@ -111,5 +115,11 @@ export class AssetsManager {
     throw new Error(
       `AssetsManager::getJSON could not found JSON with key: "${key}"`
     );
+  }
+
+  public async getOrLoadJSON(key: string, url: string | URL) {
+    const json = this._getJSON(key);
+
+    return json ?? (await this.loadJSON(key, url));
   }
 }

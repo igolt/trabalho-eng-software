@@ -1,6 +1,4 @@
-import { requestJSON } from "./assets-utils";
-
-type URLType = Parameters<typeof requestJSON>[0];
+import { AssetsManager } from "./AssetsManager";
 
 type CarrotInfo = [number, number];
 type GrassInfo = [number, number];
@@ -34,10 +32,30 @@ export interface IZone {
   collisionMap: CollisionMap;
 }
 
+const ZONE_PREFIX = "../zones/zone";
+const ZONE_SUFFIX = ".json";
+
+// TODO(igolt): fazer a validação da zona
 const validateZone = (_: any): _ is IZone => true;
 
-export const requestZoneFromJSON = async (url: URLType): Promise<IZone> => {
-  const zone = await requestJSON(url);
+const _zoneURL = (id: string) => ZONE_PREFIX + id + ZONE_SUFFIX;
+
+const zones: { readonly [statusCode: string]: string | null } = {
+  "00": _zoneURL("00"),
+  "05": _zoneURL("05"),
+};
+
+export const requestZoneFromJSON = async (
+  assetsManager: AssetsManager,
+  zoneId: string
+): Promise<IZone> => {
+  const zoneUrl = zones[zoneId];
+
+  if (zoneUrl == null) {
+    throw new Error("requestZoneFromJSON: invalid zone ID");
+  }
+
+  const zone = await assetsManager.getOrLoadJSON(zoneId.toString(), zoneUrl);
 
   if (validateZone(zone)) {
     return zone;

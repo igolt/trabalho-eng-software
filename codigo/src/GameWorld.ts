@@ -94,7 +94,7 @@ export class GameWorld {
     this._columns = zone.columns;
     this._rows = zone.rows;
 
-    zone.carrots.forEach((carrotInfo) => {
+    zone.carrots.forEach(carrotInfo => {
       this._carrots.push(
         new Carrot(
           carrotInfo[0] * this.tileSize() + 5,
@@ -103,7 +103,7 @@ export class GameWorld {
       );
     });
 
-    zone.doors.forEach((doorInfo) => {
+    zone.doors.forEach(doorInfo => {
       this.doors.push(
         new Door(
           doorInfo.x,
@@ -285,10 +285,10 @@ export class GameWorld {
   }
 
   private emitDoorCollisionEvent(door: Door) {
-    this.doorListeners.forEach((listener) => listener(door));
+    this.doorListeners.forEach(listener => listener(door));
   }
 
   private emitCarrotCollisionEvent(carrot: Carrot) {
-    this.carrotListeners.forEach((listener) => listener(carrot));
+    this.carrotListeners.forEach(listener => listener(carrot));
   }
 }
