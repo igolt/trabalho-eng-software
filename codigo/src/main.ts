@@ -159,7 +159,7 @@ window.addEventListener("load", () => {
   let tileSetImage: HTMLImageElement;
 
   const pStats = document.createElement("pStats");
-  pStats.setAttribute("style", "color:#f00e0e; font-size:2.0em; position:fixed");
+  pStats.setAttribute("style", "color:#ffffff; font-size:2.0em; position:fixed");
   pStats.innerHTML = "Apples: 0";
   document.body.appendChild(pStats);
 

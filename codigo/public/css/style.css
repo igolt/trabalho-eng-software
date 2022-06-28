@@ -19,10 +19,20 @@ body {
   width: 100%;
 }
 
-canvas {
-   image-rendering: pixelated;
- }
 
-p {
+canvas {
+  image-rendering: pixelated;
+  position: relative;
+}
+
+pStats {
   font-family: 'Silkscreen', sans-serif;
+  width: 11.8em;
+  height: 1.5em;
+  text-align: center;
+  margin: 0.1em;
+  padding: 0.1em;
+  border: 0.1em inset #ffffff;
+  background-color: #202830;
+  opacity: 0.5;
 }
