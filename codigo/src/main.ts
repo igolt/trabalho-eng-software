@@ -178,7 +178,7 @@ window.addEventListener("load", () => {
     gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
     gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
 
-    requestImage("sprite_sheets/rabbit-trap3.png").then(image => {
+    requestImage("sprite_sheets/rabbit-trap2.png").then(image => {
       tileSetImage = image;
 
       resize();
