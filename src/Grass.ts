@@ -14,7 +14,7 @@ export class Grass extends Animation {
   public readonly x: number;
   public readonly y: number;
   public static readonly SPRITE_KEY = "game-grass";
-  public static readonly SPRITE_URL = "sprite_sheets/rabbit-trap3.png";
+  public static readonly SPRITE_URL = "sprite_sheets/tileset3.png";
 
   public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(grassFrames, grassFrameSet, 25, assetsManager, {

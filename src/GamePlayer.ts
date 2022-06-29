@@ -39,7 +39,7 @@ export class GamePlayer extends MovableGameObject implements IAnimation {
   private animation: Animation;
   private directionX: PlayerDirection;
   public static readonly SPRITE_KEY = "game-player";
-  public static readonly SPRITE_URL = "sprite_sheets/rabbit-trap3.png";
+  public static readonly SPRITE_URL = "sprite_sheets/tileset3.png";
 
   public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(x, y, 7, 12);

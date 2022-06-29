@@ -17,7 +17,7 @@ export class Carrot extends GameObject implements IAnimation {
   private positionX: number;
   private positionY: number;
   public static readonly SPRITE_KEY = "game-carrot";
-  public static readonly SPRITE_URL = "sprite_sheets/rabbit-trap3.png";
+  public static readonly SPRITE_URL = "sprite_sheets/tileset3.png";
 
   public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(x, y, 7, 14);

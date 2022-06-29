@@ -2,8 +2,8 @@
   "id":"01a",
   "tileSet": {
     "spriteSheet": {
-      "key": "game-spritesheet",
-      "url": "sprite_sheets/rabbit-trap3.png"
+      "key": "game-spritesheet3",
+      "url": "sprite_sheets/tileset3.png"
     },
     "columns": 8,
     "rows": 8,

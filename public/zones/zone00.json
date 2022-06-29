@@ -2,8 +2,8 @@
   "id":"00",
   "tileSet": {
     "spriteSheet": {
-      "key": "game-spritesheet",
-      "url": "sprite_sheets/rabbit-trap3.png"
+      "key": "game-spritesheet3",
+      "url": "sprite_sheets/tileset3.png"
     },
     "columns": 8,
     "rows": 8,
@@ -12,7 +12,6 @@
 
   "carrots": [],
   "grass": [],
-
   "doors" : [
     {
       "x":192,
@@ -30,14 +29,14 @@
       "width":16,
       "height":16,
       "destinationZone": "01b",
-      "destinationX": 30,
+      "destinationX": 8,
       "destinationY": -1
     }
 
   ],
+
   "columns": 12,
   "rows"   : 9,
-
   "graphicalMap": [
     [3, 6 , 0], [2, 0, 0], [1, 5, 4], [1, 5 , 4], [1, 5, 4] , [1, 5, 4] , [2, 2 , 0] , [2, 0, 0], [1, 5 , 4], [2, 11, 4], [0, 5, 4] , [3, 6 , 4],
     [2, 0 , 0], [1, 6, 6], [2, 7, 0], [3, 3 , 0], [3, 3, 0] , [2, 7, 0] , [2, 8 , 8] , [1, 6, 6], [3, 3 , 0], [2, 7 , 0], [3, 3, 0] , [2, 7,  0],
