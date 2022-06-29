@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "module": "es2015",
-    "moduleResolution": "node",
+    "module": "es6",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
