@@ -48,12 +48,7 @@ const zones: { readonly [statusCode: string]: string | null } = {
 };
 
 const _getZoneUrlById = (zoneId: string) => {
-  const zoneUrl = zones[zoneId];
-
-  if (zoneUrl == null) {
-    throw new Error("requestZoneFromJSON: invalid zone ID");
-  }
-  return zoneUrl;
+  return ZONE_PREFIX + zoneId + ZONE_SUFFIX;
 };
 
 // TODO(igolt): fazer a validação da zona
