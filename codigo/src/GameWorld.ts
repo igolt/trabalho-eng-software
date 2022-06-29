@@ -216,7 +216,6 @@ export class GameWorld {
   }
 
   public tileSetColumns(): number {
-    console.log(`tileset columns ${this.tileSet.columns}`);
     return this.tileSet.columns;
   }
 

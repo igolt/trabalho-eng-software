@@ -1,6 +1,8 @@
 import { AssetsManager } from "./AssetsManager";
 import { SpriteSheet } from "./Animation";
 
+// REFACTOR(igolt): muita coisa misturada
+
 export interface TileSet {
   spriteSheet: SpriteSheet;
   columns: number;
@@ -57,16 +59,8 @@ const isImage = (obj: any): obj is HTMLImageElement =>
 
 const ZONE_PREFIX = "../zones/zone";
 const ZONE_SUFFIX = ".json";
-const _zoneURL = (id: string) => ZONE_PREFIX + id + ZONE_SUFFIX;
 
-const zones: { readonly [statusCode: string]: string | null } = {
-  "00": _zoneURL("00"),
-  "05": _zoneURL("05"),
-};
-
-const _getZoneUrlById = (zoneId: string) => {
-  return ZONE_PREFIX + zoneId + ZONE_SUFFIX;
-};
+const _getZoneUrlById = (id: string) => ZONE_PREFIX + id + ZONE_SUFFIX;
 
 // TODO(igolt): fazer a validação da zona
 const isZoneInfo = (_: any): _ is ZoneInfo => true;
