@@ -94,7 +94,7 @@ window.addEventListener("load", () => {
   };
 
   const carrotCollisionListener = () =>
-    (pStats.innerHTML = "Apples: " + gameWorld.carrotsCount());
+    (pStats.innerHTML = "Coffe: " + gameWorld.carrotsCount());
 
   const playerController = () => {
     if (controller.left.isDown()) {
@@ -159,7 +159,7 @@ window.addEventListener("load", () => {
     "style",
     "color:#ffffff; font-size:2.0em; position:fixed"
   );
-  pStats.innerHTML = "Apples: 0";
+  pStats.innerHTML = "Coffe: 0";
   document.body.appendChild(pStats);
 
   ////////////////////
