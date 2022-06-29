@@ -1,5 +1,12 @@
 import { FrameSet, AnimationMode, IAnimation, Animation } from "./Animation";
+import { AssetsManager } from "./AssetsManager";
+import { Frame } from "./Frame";
 import { MovableGameObject } from "./MovableGameObject";
+
+enum PlayerDirection {
+  Left,
+  Right,
+}
 
 const playerFrameSet = {
   "idle-left": [0],
@@ -10,28 +17,52 @@ const playerFrameSet = {
   "move-right": [8, 9, 10, 11],
 };
 
+const playerFrames = [
+  new Frame(115, 96, 13, 16, 0, -4), // idle-left
+  new Frame(50, 96, 13, 16, 0, -4), // jump-left
+  new Frame(102, 96, 13, 16, 0, -4),
+  new Frame(89, 96, 13, 16, 0, -4),
+  new Frame(76, 96, 13, 16, 0, -4),
+  new Frame(63, 96, 13, 16, 0, -4), // walk-left
+  new Frame(0, 112, 13, 16, 0, -4), // idle-right
+  new Frame(65, 112, 13, 16, 0, -4), // jump-right
+  new Frame(13, 112, 13, 16, 0, -4),
+  new Frame(26, 112, 13, 16, 0, -4),
+  new Frame(39, 112, 13, 16, 0, -4),
+  new Frame(52, 112, 13, 16, 0, -4), // walk-right
+];
+
 const playerDx = 0.55;
-
 const playerMoveAnimationDelay = 5;
-
-enum PlayerDirection {
-  Left,
-  Right,
-}
 
 export class GamePlayer extends MovableGameObject implements IAnimation {
   private animation: Animation;
   private directionX: PlayerDirection;
+  public static readonly SPRITE_KEY = "game-player";
+  public static readonly SPRITE_URL = "sprite_sheets/rabbit-trap3.png";
 
-  public constructor(x: number, y: number) {
+  public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(x, y, 7, 12);
 
-    this.animation = new Animation(playerFrameSet["idle-left"], 10);
+    this.animation = new Animation(
+      playerFrames,
+      playerFrameSet["idle-left"],
+      10,
+      assetsManager,
+      {
+        key: GamePlayer.SPRITE_KEY,
+        url: GamePlayer.SPRITE_URL,
+      }
+    );
 
     this.setJumping(true);
     this.setVelocityX(0);
     this.setVelocityY(0);
     this.directionX = PlayerDirection.Left;
+  }
+
+  public frame() {
+    return this.animation.frame();
   }
 
   public animate(): void {
@@ -49,6 +80,14 @@ export class GamePlayer extends MovableGameObject implements IAnimation {
     frameIndex?: number
   ): void {
     this.animation.changeFrameSet(frameSet, mode, delay, frameIndex);
+  }
+
+  public spriteSheet() {
+    return this.animation.spriteSheet();
+  }
+
+  public loadSprite() {
+    return this.animation.loadSprite();
   }
 
   public jump() {

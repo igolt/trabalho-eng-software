@@ -5,7 +5,7 @@ import { IZone } from "./GameZone";
 import { Grass } from "./Grass";
 import { collide } from "./collision";
 import { MovableGameObject } from "./MovableGameObject";
-import { Frame } from "./Frame";
+import { AssetsManager } from "./AssetsManager";
 
 type DoorCollisionListener = (door: Door) => void;
 type CarrotCollisionListener = (carrot: Carrot) => void;
@@ -15,30 +15,12 @@ const testTileSet = {
   columns: 8,
   rows: 8,
   tileSize: 16,
-  frames: [
-    new Frame(115, 96, 13, 16, 0, -4), // idle-left
-    new Frame(50, 96, 13, 16, 0, -4), // jump-left
-    new Frame(102, 96, 13, 16, 0, -4),
-    new Frame(89, 96, 13, 16, 0, -4),
-    new Frame(76, 96, 13, 16, 0, -4),
-    new Frame(63, 96, 13, 16, 0, -4), // walk-left
-    new Frame(0, 112, 13, 16, 0, -4), // idle-right
-    new Frame(65, 112, 13, 16, 0, -4), // jump-right
-    new Frame(13, 112, 13, 16, 0, -4),
-    new Frame(26, 112, 13, 16, 0, -4),
-    new Frame(39, 112, 13, 16, 0, -4),
-    new Frame(52, 112, 13, 16, 0, -4), // walk-right
-    new Frame(81, 112, 14, 16),
-    new Frame(96, 112, 16, 16), // carrot
-    new Frame(112, 115, 16, 4),
-    new Frame(112, 124, 16, 4),
-    new Frame(112, 119, 16, 4), // grass
-  ],
 };
 
 export class GameWorld {
   private friction: number;
   private gravity: number;
+  private assetsManager: AssetsManager;
   private _carrots: Array<Carrot>;
   private _carrotsCount: number;
   private _grass: Array<Grass>;
@@ -58,7 +40,12 @@ export class GameWorld {
     return this._carrotsCount;
   }
 
-  public constructor(friction?: number, gravity?: number) {
+  public constructor(
+    assetsManager: AssetsManager,
+    friction?: number,
+    gravity?: number
+  ) {
+    this.assetsManager = assetsManager;
     this.friction = friction ?? 0.85;
     this.gravity = gravity ?? 1;
 
@@ -67,7 +54,7 @@ export class GameWorld {
 
     this.tileSet = testTileSet;
     // WARN(igolt): valores chutados, depois verificar isso aqui
-    this._player = new GamePlayer(32, 76);
+    this._player = new GamePlayer(32, 76, assetsManager);
 
     this._carrots = [];
     this._carrotsCount = 0;
@@ -98,7 +85,8 @@ export class GameWorld {
       this._carrots.push(
         new Carrot(
           carrotInfo[0] * this.tileSize() + 5,
-          carrotInfo[1] * this.tileSize() - 2
+          carrotInfo[1] * this.tileSize() - 2,
+          this.assetsManager
         )
       );
     });
@@ -121,7 +109,8 @@ export class GameWorld {
       this._grass.push(
         new Grass(
           grassInfo[0] * this.tileSize(),
-          grassInfo[1] * this.tileSize() + 12
+          grassInfo[1] * this.tileSize() + 12,
+          this.assetsManager
         )
       );
     });
@@ -244,10 +233,6 @@ export class GameWorld {
     return this._width;
   }
 
-  public getFrame(idx: number) {
-    return this.tileSet.frames[idx];
-  }
-
   // FIX: não sei pq esses valores
   public columns(): number {
     return this._columns;
@@ -290,5 +275,11 @@ export class GameWorld {
 
   private emitCarrotCollisionEvent(carrot: Carrot) {
     this.carrotListeners.forEach(listener => listener(carrot));
+  }
+
+  public async loadSprites() {
+    this._carrots.forEach(async carrot => await carrot.loadSprite());
+    this._grass.forEach(async grass => await grass.loadSprite());
+    await this.player().loadSprite();
   }
 }

@@ -1,11 +1,26 @@
 import { Animation } from "./Animation";
+import { AssetsManager } from "./AssetsManager";
+import { Frame } from "./Frame";
+
+const grassFrames = [
+  new Frame(112, 115, 16, 4),
+  new Frame(112, 124, 16, 4),
+  new Frame(112, 119, 16, 4), // grass
+];
+
+const grassFrameSet = [0, 1, 2, 1];
 
 export class Grass extends Animation {
   public readonly x: number;
   public readonly y: number;
+  public static readonly SPRITE_KEY = "game-grass";
+  public static readonly SPRITE_URL = "sprite_sheets/rabbit-trap3.png";
 
-  public constructor(x: number, y: number) {
-    super([14, 15, 16, 15], 25);
+  public constructor(x: number, y: number, assetsManager: AssetsManager) {
+    super(grassFrames, grassFrameSet, 25, assetsManager, {
+      key: Grass.SPRITE_KEY,
+      url: Grass.SPRITE_URL,
+    });
     this.x = x;
     this.y = y;
   }

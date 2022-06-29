@@ -2,7 +2,6 @@ import { GameWorld } from "./GameWorld";
 import { Engine } from "./Engine";
 import { Display } from "./Display";
 import { Controller } from "./Controller";
-import { requestImage } from "./assets-utils";
 import { requestZoneFromJSON } from "./GameZone";
 import { Door } from "./Door";
 import { AssetsManager } from "./AssetsManager";
@@ -47,10 +46,10 @@ window.addEventListener("load", () => {
 
     for (let index = gameWorld.carrots().length - 1; index > -1; --index) {
       const carrot = gameWorld.carrots()[index];
-      const frame = gameWorld.getFrame(carrot.frameValue());
+      const frame = carrot.frame();
 
       display.drawObject(
-        tileSetImage,
+        carrot.spriteSheet(),
         frame.x,
         frame.y,
         carrot.getX() +
@@ -62,10 +61,10 @@ window.addEventListener("load", () => {
       );
     }
 
-    const frame = gameWorld.getFrame(gameWorld.player().frameValue());
+    const frame = gameWorld.player().frame();
 
     display.drawObject(
-      tileSetImage,
+      gameWorld.player().spriteSheet(),
       frame.x,
       frame.y,
       gameWorld.player().getX() +
@@ -78,10 +77,10 @@ window.addEventListener("load", () => {
 
     for (let index = gameWorld.grass().length - 1; index > -1; --index) {
       const grass = gameWorld.grass()[index];
-      const frame = gameWorld.getFrame(grass.frameValue());
+      const frame = grass.frame();
 
       display.drawObject(
-        tileSetImage,
+        grass.spriteSheet(),
         frame.x,
         frame.y,
         grass.x + frame.offsetX,
@@ -136,9 +135,11 @@ window.addEventListener("load", () => {
       requestZoneFromJSON(assetsManager, door.destinationZone).then(zone => {
         gameWorld.setup(zone);
 
-        movePlayerToDoorDestination(door);
+        gameWorld.loadSprites().then(() => {
+          movePlayerToDoorDestination(door);
 
-        engine.start();
+          engine.start();
+        });
       });
     }
   };
@@ -149,9 +150,9 @@ window.addEventListener("load", () => {
 
   const controller = new Controller();
   const display = new Display();
-  const gameWorld = new GameWorld();
-  const engine = new Engine(1000 / 30, render, update);
   const assetsManager = new AssetsManager();
+  const gameWorld = new GameWorld(assetsManager);
+  const engine = new Engine(1000 / 30, render, update);
 
   let tileSetImage: HTMLImageElement;
 
@@ -173,14 +174,16 @@ window.addEventListener("load", () => {
 
   window.addEventListener("resize", resize);
 
-  requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(zone => {
+  requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
     gameWorld.setup(zone);
     gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
     gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
 
-    requestImage("sprite_sheets/rabbit-trap2.png").then(image => {
-      tileSetImage = image;
-
+    tileSetImage = await assetsManager.getOrLoadImage(
+      "game-spritesheet",
+      "sprite_sheets/rabbit-trap3.png"
+    );
+    gameWorld.loadSprites().then(() => {
       resize();
       engine.start();
     });

@@ -24,7 +24,7 @@ export class AssetsManager {
   private _loadedAudios: Map<string, HTMLAudioElement>;
   private _loadedJsons: Map<string, any>;
   private _channels: Array<Channel>;
-  public static MAX_CHANNELS = 20;
+  public static readonly MAX_CHANNELS = 20;
 
   constructor() {
     this._channels = [];
@@ -57,6 +57,14 @@ export class AssetsManager {
     throw new Error(
       `AssetsManager::getImage: could not found image with key: "${key}"`
     );
+  }
+
+  public imageIsLoaded(key: string): boolean {
+    return !!this._getImage(key);
+  }
+
+  public async getOrLoadImage(key: string, url: string | URL) {
+    return this._getImage(key) ?? (await this.loadImage(key, url));
   }
 
   public loadAudio(key: string, url: string | URL) {
@@ -118,8 +126,6 @@ export class AssetsManager {
   }
 
   public async getOrLoadJSON(key: string, url: string | URL) {
-    const json = this._getJSON(key);
-
-    return json ?? (await this.loadJSON(key, url));
+    return this._getJSON(key) ?? (await this.loadJSON(key, url));
   }
 }
