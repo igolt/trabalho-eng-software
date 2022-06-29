@@ -1,6 +1,14 @@
 import { FrameSet, AnimationMode, IAnimation, Animation } from "./Animation";
 import { AssetsManager } from "./AssetsManager";
 import { GameObject } from "./GameObject";
+import { Frame } from "./Frame";
+
+const carrotFrames = [
+  new Frame(81, 112, 14, 16),
+  new Frame(96, 112, 16, 16), // carrot
+];
+
+const carrotFrameSet = [0, 1];
 
 export class Carrot extends GameObject implements IAnimation {
   private animation: Animation;
@@ -14,10 +22,16 @@ export class Carrot extends GameObject implements IAnimation {
   public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(x, y, 7, 14);
 
-    this.animation = new Animation([12, 13], 15, assetsManager, {
-      key: Carrot.SPRITE_KEY,
-      url: Carrot.SPRITE_URL,
-    });
+    this.animation = new Animation(
+      carrotFrames,
+      carrotFrameSet,
+      15,
+      assetsManager,
+      {
+        key: Carrot.SPRITE_KEY,
+        url: Carrot.SPRITE_URL,
+      }
+    );
     // baseX e baseY são o ponto no qual a carrot se move. positionX
     // e y são usados para acompanhar o vetor distante do ponto base para dar
     // a cenoura um efeito flutuante
@@ -26,6 +40,10 @@ export class Carrot extends GameObject implements IAnimation {
 
     this.positionX = Math.random() * Math.PI * 2;
     this.positionY = this.positionX * 2;
+  }
+
+  public frame() {
+    return this.animation.frame();
   }
 
   public animate(): void {

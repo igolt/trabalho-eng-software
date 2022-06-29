@@ -5,7 +5,6 @@ import { IZone } from "./GameZone";
 import { Grass } from "./Grass";
 import { collide } from "./collision";
 import { MovableGameObject } from "./MovableGameObject";
-import { Frame } from "./Frame";
 import { AssetsManager } from "./AssetsManager";
 
 type DoorCollisionListener = (door: Door) => void;
@@ -16,25 +15,6 @@ const testTileSet = {
   columns: 8,
   rows: 8,
   tileSize: 16,
-  frames: [
-    new Frame(115, 96, 13, 16, 0, -4), // idle-left
-    new Frame(50, 96, 13, 16, 0, -4), // jump-left
-    new Frame(102, 96, 13, 16, 0, -4),
-    new Frame(89, 96, 13, 16, 0, -4),
-    new Frame(76, 96, 13, 16, 0, -4),
-    new Frame(63, 96, 13, 16, 0, -4), // walk-left
-    new Frame(0, 112, 13, 16, 0, -4), // idle-right
-    new Frame(65, 112, 13, 16, 0, -4), // jump-right
-    new Frame(13, 112, 13, 16, 0, -4),
-    new Frame(26, 112, 13, 16, 0, -4),
-    new Frame(39, 112, 13, 16, 0, -4),
-    new Frame(52, 112, 13, 16, 0, -4), // walk-right
-    new Frame(81, 112, 14, 16),
-    new Frame(96, 112, 16, 16), // carrot
-    new Frame(112, 115, 16, 4),
-    new Frame(112, 124, 16, 4),
-    new Frame(112, 119, 16, 4), // grass
-  ],
 };
 
 export class GameWorld {
@@ -251,10 +231,6 @@ export class GameWorld {
 
   public width(): number {
     return this._width;
-  }
-
-  public getFrame(idx: number) {
-    return this.tileSet.frames[idx];
   }
 
   // FIX: não sei pq esses valores

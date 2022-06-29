@@ -1,9 +1,13 @@
 import { AssetsManager } from "./AssetsManager";
+import { Frame } from "./Frame";
 
 export type AnimationMode = "loop" | "pause";
 export type FrameSet = Array<number>;
 
+type SpriteSheet = HTMLImageElement | { key: string; url: string };
+
 export interface IAnimation {
+  frame: () => Frame;
   frameValue: () => number;
   animate: () => void;
   spriteSheet: () => HTMLImageElement;
@@ -20,9 +24,10 @@ const isImage = (obj: any): obj is HTMLImageElement =>
   obj instanceof HTMLImageElement;
 
 export class Animation implements IAnimation {
+  private _frames: Array<Frame>;
   private count: number;
   private delay: number;
-  private _spriteSheet: HTMLImageElement | { key: string; url: string };
+  private _spriteSheet: SpriteSheet;
   private frameSet: FrameSet;
   private frameIndex: number;
   private _frameValue: number;
@@ -30,10 +35,11 @@ export class Animation implements IAnimation {
   private assetsManager: AssetsManager;
 
   public constructor(
+    frames: Array<Frame>,
     frameSet: FrameSet,
     delay: number,
     assetsManager: AssetsManager,
-    spriteSheet: HTMLImageElement | { key: string; url: string },
+    spriteSheet: SpriteSheet,
     mode?: AnimationMode,
     frameIndex?: number
   ) {
@@ -47,6 +53,7 @@ export class Animation implements IAnimation {
       this._spriteSheet = spriteSheet;
     }
 
+    this._frames = frames;
     this.assetsManager = assetsManager;
     this.count = 0;
     this.delay = delay >= 1 ? delay : 1;
@@ -54,6 +61,10 @@ export class Animation implements IAnimation {
     this.frameIndex = frameIndex ?? 0;
     this._frameValue = this.frameSet[0];
     this.mode = mode ?? "loop";
+  }
+
+  public frame() {
+    return this._frames[this.frameValue()];
   }
 
   public frameValue(): number {

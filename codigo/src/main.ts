@@ -46,7 +46,7 @@ window.addEventListener("load", () => {
 
     for (let index = gameWorld.carrots().length - 1; index > -1; --index) {
       const carrot = gameWorld.carrots()[index];
-      const frame = gameWorld.getFrame(carrot.frameValue());
+      const frame = carrot.frame();
 
       display.drawObject(
         carrot.spriteSheet(),
@@ -61,7 +61,7 @@ window.addEventListener("load", () => {
       );
     }
 
-    const frame = gameWorld.getFrame(gameWorld.player().frameValue());
+    const frame = gameWorld.player().frame();
 
     display.drawObject(
       gameWorld.player().spriteSheet(),
@@ -77,7 +77,7 @@ window.addEventListener("load", () => {
 
     for (let index = gameWorld.grass().length - 1; index > -1; --index) {
       const grass = gameWorld.grass()[index];
-      const frame = gameWorld.getFrame(grass.frameValue());
+      const frame = grass.frame();
 
       display.drawObject(
         grass.spriteSheet(),
