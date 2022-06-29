@@ -1,7 +1,7 @@
 import { Carrot } from "./Carrot";
 import { Door } from "./Door";
 import { GamePlayer } from "./GamePlayer";
-import { IZone } from "./GameZone";
+import { IZone, TileSet } from "./GameZone";
 import { Grass } from "./Grass";
 import { collide } from "./collision";
 import { MovableGameObject } from "./MovableGameObject";
@@ -11,7 +11,11 @@ type DoorCollisionListener = (door: Door) => void;
 type CarrotCollisionListener = (carrot: Carrot) => void;
 
 // WARN(igolt): remover isso depois
-const testTileSet = {
+const defaultTileSet = {
+  spriteSheet: {
+    key: "invalid-key",
+    url: "invalid-url",
+  },
   columns: 8,
   rows: 8,
   tileSize: 16,
@@ -26,7 +30,7 @@ export class GameWorld {
   private _grass: Array<Grass>;
   private doors: Array<Door>;
   private zone?: IZone;
-  private tileSet: typeof testTileSet;
+  private tileSet: TileSet;
   // TODO(igolt): isso aqui vai mover pra outro lugar
   private _player: GamePlayer;
   private _height: number;
@@ -52,7 +56,7 @@ export class GameWorld {
     this._columns = 12;
     this._rows = 9;
 
-    this.tileSet = testTileSet;
+    this.tileSet = defaultTileSet;
     // WARN(igolt): valores chutados, depois verificar isso aqui
     this._player = new GamePlayer(32, 76, assetsManager);
 
@@ -80,6 +84,7 @@ export class GameWorld {
     this.zone = zone;
     this._columns = zone.columns;
     this._rows = zone.rows;
+    this.tileSet = zone.tileSet;
 
     zone.carrots.forEach(carrotInfo => {
       this._carrots.push(
@@ -211,6 +216,7 @@ export class GameWorld {
   }
 
   public tileSetColumns(): number {
+    console.log(`tileset columns ${this.tileSet.columns}`);
     return this.tileSet.columns;
   }
 
@@ -278,8 +284,18 @@ export class GameWorld {
   }
 
   public async loadSprites() {
+    if (this.zone) {
+      await this.zone.loadSprite();
+    }
     this._carrots.forEach(async carrot => await carrot.loadSprite());
     this._grass.forEach(async grass => await grass.loadSprite());
     await this.player().loadSprite();
+  }
+
+  public tileSetImage() {
+    if (!this.zone) {
+      throw new Error("GameWorld::tileSetImage: no zone loaded");
+    }
+    return this.zone.tileSetImage();
   }
 }

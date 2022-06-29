@@ -35,12 +35,12 @@ window.addEventListener("load", () => {
 
   const render = () => {
     display.drawMap(
-      tileSetImage,
+      gameWorld.tileSetImage(),
       gameWorld.tileSetColumns(),
-      gameWorld.tileSetRows(),
+      // gameWorld.tileSetRows(),
       gameWorld.graphicalMap(),
       gameWorld.columns(),
-      gameWorld.rows(),
+      // gameWorld.rows(),
       gameWorld.tileSize()
     );
 
@@ -154,8 +154,6 @@ window.addEventListener("load", () => {
   const gameWorld = new GameWorld(assetsManager);
   const engine = new Engine(1000 / 30, render, update);
 
-  let tileSetImage: HTMLImageElement;
-
   const pStats = document.createElement("pStats");
   pStats.setAttribute(
     "style",
@@ -179,10 +177,6 @@ window.addEventListener("load", () => {
     gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
     gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
 
-    tileSetImage = await assetsManager.getOrLoadImage(
-      "game-spritesheet",
-      "sprite_sheets/rabbit-trap3.png"
-    );
     gameWorld.loadSprites().then(() => {
       resize();
       engine.start();

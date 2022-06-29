@@ -1,4 +1,12 @@
 import { AssetsManager } from "./AssetsManager";
+import { SpriteSheet } from "./Animation";
+
+export interface TileSet {
+  spriteSheet: SpriteSheet;
+  columns: number;
+  rows: number;
+  tileSize: number;
+}
 
 type CarrotInfo = [number, number];
 type GrassInfo = [number, number];
@@ -21,22 +29,31 @@ type CollisionMap = Array<number>;
 interface IZoneBase {
   id: string;
 
+  tileSet: TileSet;
   carrots: Array<CarrotInfo>;
   grass: Array<GrassInfo>;
   doors: Array<DoorInfo>;
+
+  tileSetImage: () => HTMLImageElement;
 
   columns: number;
   rows: number;
 }
 
 export type IZone = IZoneBase & {
+  assetsManager: AssetsManager;
   graphicalMap: GraphicalMap;
   collisionMap: CollisionMap;
+  loadSprite: () => Promise<void>;
 };
 
 type ZoneInfo = IZoneBase & {
-  graphicalMap: Array<[number, number, number]>;
+  graphicalMap: Array<[number, number, number]> | Array<number>;
+  collisionMap?: Array<number>;
 };
+
+const isImage = (obj: any): obj is HTMLImageElement =>
+  obj instanceof HTMLImageElement;
 
 const ZONE_PREFIX = "../zones/zone";
 const ZONE_SUFFIX = ".json";
@@ -59,26 +76,13 @@ const _getZoneUrlById = (zoneId: string) => {
 // TODO(igolt): fazer a validação da zona
 const isZoneInfo = (_: any): _ is ZoneInfo => true;
 
-// TODO(igolt): fazer a validação da zona
-const isZone = (obj: any): obj is IZone => {
-  if (!("graphicalMap" in obj)) {
-    return false;
-  }
-  const graphicalMap = obj["graphicalMap"];
-  const firstElement = graphicalMap[0];
+const hasCollisionMap = (zoneInfo: any) => "collisionMap" in zoneInfo;
 
-  if (firstElement == null || firstElement == undefined) {
-    return true;
-  }
-  return typeof firstElement == "number";
-};
-
-// TODO(igolt): fazer função de conversão
-const zoneInfoToZone = (zoneInfo: ZoneInfo): IZone => {
+const parseGraphicalAndCollisionMap = (zoneInfo: any) => {
   const newGraphicalMap: number[] = [];
   const collisionMap: number[] = [];
 
-  zoneInfo.graphicalMap.forEach(value => {
+  zoneInfo.graphicalMap.forEach((value: [number, number, number]) => {
     newGraphicalMap.push(value[0] * zoneInfo.columns + value[1]);
     collisionMap.push(value[2]);
   });
@@ -89,6 +93,35 @@ const zoneInfoToZone = (zoneInfo: ZoneInfo): IZone => {
   return zoneInfo as any as IZone;
 };
 
+// TODO(igolt): fazer função de conversão
+const zoneInfoToZone = (zoneInfo: any, assetsManager: AssetsManager): IZone => {
+  if (!hasCollisionMap(zoneInfo)) {
+    zoneInfo = parseGraphicalAndCollisionMap(zoneInfo);
+  }
+
+  const zone: IZone = zoneInfo as IZone;
+
+  return Object.assign(zoneInfo, {
+    assetsManager: assetsManager,
+
+    loadSprite: async () => {
+      if (!isImage(zone.tileSet.spriteSheet)) {
+        zone.tileSet.spriteSheet = await assetsManager.getOrLoadImage(
+          zone.tileSet.spriteSheet.key,
+          zone.tileSet.spriteSheet.url
+        );
+      }
+    },
+
+    tileSetImage: () => {
+      if (isImage(zone.tileSet.spriteSheet)) {
+        return zone.tileSet.spriteSheet;
+      }
+      throw new Error("Zone::tileSetImage: spritesheet not loaded");
+    },
+  });
+};
+
 export const requestZoneFromJSON = async (
   assetsManager: AssetsManager,
   zoneId: string
@@ -96,12 +129,8 @@ export const requestZoneFromJSON = async (
   const zoneUrl = _getZoneUrlById(zoneId);
   const zone = await assetsManager.getOrLoadJSON(zoneId, zoneUrl);
 
-  if (isZone(zone)) {
-    console.log("loading old zone format");
-    return zone;
-  } else if (isZoneInfo(zone)) {
-    console.log("loading new zone format");
-    return zoneInfoToZone(zone);
+  if (isZoneInfo(zone)) {
+    return zoneInfoToZone(zone, assetsManager);
   }
   throw new Error("requestZoneFromJSON: invalid JSON format for zone.");
 };

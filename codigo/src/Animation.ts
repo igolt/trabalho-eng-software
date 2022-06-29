@@ -4,7 +4,7 @@ import { Frame } from "./Frame";
 export type AnimationMode = "loop" | "pause";
 export type FrameSet = Array<number>;
 
-type SpriteSheet = HTMLImageElement | { key: string; url: string };
+export type SpriteSheet = HTMLImageElement | { key: string; url: string };
 
 export interface IAnimation {
   frame: () => Frame;

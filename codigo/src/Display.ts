@@ -21,10 +21,10 @@ export class Display {
   public drawMap(
     image: CanvasImageSource,
     imageColums: number,
-    imageRows: number,
+    // imageRows: number,
     map: Array<number>,
     mapColumns: number,
-    mapRows: number,
+    // mapRows: number,
     tileSize: number
   ) {
     map.forEach((value, index) => {
