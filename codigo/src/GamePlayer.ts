@@ -1,4 +1,5 @@
 import { FrameSet, AnimationMode, IAnimation, Animation } from "./Animation";
+import { AssetsManager } from "./AssetsManager";
 import { MovableGameObject } from "./MovableGameObject";
 
 const playerFrameSet = {
@@ -22,11 +23,21 @@ enum PlayerDirection {
 export class GamePlayer extends MovableGameObject implements IAnimation {
   private animation: Animation;
   private directionX: PlayerDirection;
+  public static readonly SPRITE_KEY = "game-player";
+  public static readonly SPRITE_URL = "sprite_sheets/rabbit-trap3.png";
 
-  public constructor(x: number, y: number) {
+  public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(x, y, 7, 12);
 
-    this.animation = new Animation(playerFrameSet["idle-left"], 10);
+    this.animation = new Animation(
+      playerFrameSet["idle-left"],
+      10,
+      assetsManager,
+      {
+        key: GamePlayer.SPRITE_KEY,
+        url: GamePlayer.SPRITE_URL,
+      }
+    );
 
     this.setJumping(true);
     this.setVelocityX(0);
@@ -49,6 +60,14 @@ export class GamePlayer extends MovableGameObject implements IAnimation {
     frameIndex?: number
   ): void {
     this.animation.changeFrameSet(frameSet, mode, delay, frameIndex);
+  }
+
+  public spriteSheet() {
+    return this.animation.spriteSheet();
+  }
+
+  public loadSprite() {
+    return this.animation.loadSprite();
   }
 
   public jump() {

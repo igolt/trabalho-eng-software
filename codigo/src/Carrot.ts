@@ -1,4 +1,5 @@
 import { FrameSet, AnimationMode, IAnimation, Animation } from "./Animation";
+import { AssetsManager } from "./AssetsManager";
 import { GameObject } from "./GameObject";
 
 export class Carrot extends GameObject implements IAnimation {
@@ -7,11 +8,16 @@ export class Carrot extends GameObject implements IAnimation {
   private baseY: number;
   private positionX: number;
   private positionY: number;
+  public static readonly SPRITE_KEY = "game-carrot";
+  public static readonly SPRITE_URL = "sprite_sheets/rabbit-trap3.png";
 
-  public constructor(x: number, y: number) {
+  public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(x, y, 7, 14);
 
-    this.animation = new Animation([12, 13], 15);
+    this.animation = new Animation([12, 13], 15, assetsManager, {
+      key: Carrot.SPRITE_KEY,
+      url: Carrot.SPRITE_URL,
+    });
     // baseX e baseY são o ponto no qual a carrot se move. positionX
     // e y são usados para acompanhar o vetor distante do ponto base para dar
     // a cenoura um efeito flutuante
@@ -37,6 +43,14 @@ export class Carrot extends GameObject implements IAnimation {
     frameIndex?: number
   ): void {
     this.animation.changeFrameSet(frameSet, mode, delay, frameIndex);
+  }
+
+  public spriteSheet() {
+    return this.animation.spriteSheet();
+  }
+
+  public loadSprite() {
+    return this.animation.loadSprite();
   }
 
   public updatePosition() {
