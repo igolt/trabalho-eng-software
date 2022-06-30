@@ -23,7 +23,7 @@ export class AssetsManager {
   private _loadedImages: Map<string, HTMLImageElement>;
   private _loadedAudios: Map<string, HTMLAudioElement>;
   private _loadedJsons: Map<string, any>;
-  private _channels: Array<Channel>;
+  private _channels: Channel[];
   public static readonly MAX_CHANNELS = 20;
 
   constructor() {

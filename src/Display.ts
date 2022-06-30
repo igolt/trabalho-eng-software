@@ -22,7 +22,7 @@ export class Display {
     image: CanvasImageSource,
     imageColums: number,
     // imageRows: number,
-    map: Array<number>,
+    map: number[],
     mapColumns: number,
     // mapRows: number,
     tileSize: number

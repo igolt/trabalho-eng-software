@@ -1,7 +1,7 @@
 import { Coffee } from "./Coffee";
 import { Door } from "./Door";
 import { GamePlayer } from "./GamePlayer";
-import { IZone, TileSet } from "./GameZone";
+import { IZone, ITileSet } from "./GameZone";
 import { Grass } from "./Grass";
 import { collide } from "./collision";
 import { MovableGameObject } from "./MovableGameObject";
@@ -25,20 +25,20 @@ export class GameWorld {
   private friction: number;
   private gravity: number;
   private assetsManager: AssetsManager;
-  private _coffees: Array<Coffee>;
+  private _coffees: Coffee[];
   private _coffeesCount: number;
-  private _grass: Array<Grass>;
-  private doors: Array<Door>;
+  private _grass: Grass[];
+  private doors: Door[];
   private zone?: IZone;
-  private tileSet: TileSet;
+  private tileSet: ITileSet;
   // TODO(igolt): isso aqui vai mover pra outro lugar
   private _player: GamePlayer;
   private _height: number;
   private _width: number;
   private _columns: number;
   private _rows: number;
-  private doorListeners: Array<DoorCollisionListener>;
-  private coffeeListeners: Array<CoffeeCollisionListener>;
+  private doorListeners: DoorCollisionListener[];
+  private coffeeListeners: CoffeeCollisionListener[];
   private coffeeState: Map<string, Coffee[]>;
 
   public coffeeCount(): number {
@@ -83,8 +83,8 @@ export class GameWorld {
     if (this.zone) {
       this.coffeeState.set(this.zone.id, this._coffees);
     }
-    this.doors = new Array();
-    this._grass = new Array();
+    this.doors = [];
+    this._grass = [];
     this.zone = zone;
     this._columns = zone.columns;
     this._rows = zone.rows;
@@ -95,7 +95,7 @@ export class GameWorld {
     if (saveCoffees) {
       this._coffees = saveCoffees;
     } else {
-      this._coffees = new Array();
+      this._coffees = [];
       zone.coffees.forEach(coffeeInfo => {
         this._coffees.push(
           new Coffee(

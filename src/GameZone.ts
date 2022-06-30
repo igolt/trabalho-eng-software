@@ -1,9 +1,7 @@
 import { AssetsManager } from "./AssetsManager";
 import { SpriteSheet } from "./Animation";
 
-// REFACTOR(igolt): muita coisa misturada
-
-export interface TileSet {
+export interface ITileSet {
   spriteSheet: SpriteSheet;
   columns: number;
   rows: number;
@@ -25,21 +23,21 @@ type DoorInfo = {
   destinationY: number;
 };
 
-type GraphicalMap = Array<number>;
-type CollisionMap = Array<number>;
+type GraphicalMap = number[];
+type CollisionMap = number[];
 
 interface IZoneBase {
   id: string;
 
-  tileSet: TileSet;
-  coffees: Array<CoffeeInfo>;
-  grass: Array<GrassInfo>;
-  doors: Array<DoorInfo>;
-
-  tileSetImage: () => HTMLImageElement;
-
   columns: number;
   rows: number;
+
+  tileSet: ITileSet;
+  coffees: CoffeeInfo[];
+  grass: GrassInfo[];
+  doors: DoorInfo[];
+
+  tileSetImage(): HTMLImageElement;
 }
 
 export type IZone = IZoneBase & {
@@ -49,10 +47,16 @@ export type IZone = IZoneBase & {
   loadSprite: () => Promise<void>;
 };
 
-type ZoneInfo = IZoneBase & {
-  graphicalMap: Array<[number, number, number]> | Array<number>;
-  collisionMap?: Array<number>;
+type ZoneInfoWithCollisionMap = IZoneBase & {
+  graphicalMap: number[];
+  collisionMap?: number[];
 };
+
+type ZoneInfoWithoutCollisionMap = IZoneBase & {
+  graphicalMap: [number, number, number][];
+};
+
+type ZoneInfo = ZoneInfoWithCollisionMap | ZoneInfoWithoutCollisionMap;
 
 const isImage = (obj: any): obj is HTMLImageElement =>
   obj instanceof HTMLImageElement;
@@ -65,24 +69,28 @@ const _getZoneUrlById = (id: string) => ZONE_PREFIX + id + ZONE_SUFFIX;
 // TODO(igolt): fazer a validação da zona
 const isZoneInfo = (_: any): _ is ZoneInfo => true;
 
-const hasCollisionMap = (zoneInfo: any) => "collisionMap" in zoneInfo;
+const hasCollisionMap = (
+  zoneInfo: ZoneInfo
+): zoneInfo is ZoneInfoWithCollisionMap => "collisionMap" in zoneInfo;
 
-const parseGraphicalAndCollisionMap = (zoneInfo: any) => {
+const parseGraphicalAndCollisionMap = (
+  zoneInfo: ZoneInfoWithoutCollisionMap
+) => {
   const newGraphicalMap: number[] = [];
   const collisionMap: number[] = [];
 
-  zoneInfo.graphicalMap.forEach((value: [number, number, number]) => {
+  zoneInfo.graphicalMap.forEach(value => {
     newGraphicalMap.push(value[0] * zoneInfo.columns + value[1]);
     collisionMap.push(value[2]);
   });
 
-  (zoneInfo as any).graphicalMap = newGraphicalMap;
-  zoneInfo = Object.assign(zoneInfo, { collisionMap });
-
-  return zoneInfo as any as IZone;
+  return {
+    ...zoneInfo,
+    graphicalMap: newGraphicalMap,
+    collisionMap,
+  };
 };
 
-// TODO(igolt): fazer função de conversão
 const zoneInfoToZone = (zoneInfo: any, assetsManager: AssetsManager): IZone => {
   if (!hasCollisionMap(zoneInfo)) {
     zoneInfo = parseGraphicalAndCollisionMap(zoneInfo);

@@ -2,7 +2,7 @@ import { AssetsManager } from "./AssetsManager";
 import { Frame } from "./Frame";
 
 export type AnimationMode = "loop" | "pause";
-export type FrameSet = Array<number>;
+export type FrameSet = number[];
 
 export type SpriteSheet = HTMLImageElement | { key: string; url: string };
 
@@ -24,7 +24,7 @@ const isImage = (obj: any): obj is HTMLImageElement =>
   obj instanceof HTMLImageElement;
 
 export class Animation implements IAnimation {
-  private _frames: Array<Frame>;
+  private _frames: Frame[];
   private count: number;
   private delay: number;
   private _spriteSheet: SpriteSheet;
@@ -35,7 +35,7 @@ export class Animation implements IAnimation {
   private assetsManager: AssetsManager;
 
   public constructor(
-    frames: Array<Frame>,
+    frames: Frame[],
     frameSet: FrameSet,
     delay: number,
     assetsManager: AssetsManager,
