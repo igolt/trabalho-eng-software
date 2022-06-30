@@ -110,4 +110,18 @@ export class Display {
   public disableImageSmoothing() {
     this.buffer.imageSmoothingEnabled = false;
   }
+
+  public drawImage(image: HTMLImageElement) {
+    this.buffer.drawImage(
+      image,
+      0,
+      0,
+      image.naturalWidth,
+      image.naturalHeight,
+      0,
+      0,
+      this.buffer.canvas.width,
+      this.buffer.canvas.height
+    );
+  }
 }

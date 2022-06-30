@@ -30,11 +30,13 @@ export class Controller {
   public left: ControllerButton;
   public right: ControllerButton;
   public up: ControllerButton;
+  public space: ControllerButton;
 
   public constructor() {
     this.left = new ControllerButton();
     this.right = new ControllerButton();
     this.up = new ControllerButton();
+    this.space = new ControllerButton();
 
     window.addEventListener("keydown", this.keyboardUpdate.bind(this));
     window.addEventListener("keyup", this.keyboardUpdate.bind(this));
@@ -52,6 +54,9 @@ export class Controller {
         break;
       case "ArrowRight":
         this.right.update(isDown);
+        break;
+      case " ":
+        this.space.update(isDown);
     }
   }
 }

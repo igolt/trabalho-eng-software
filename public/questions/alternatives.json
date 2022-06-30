@@ -1,12 +1,12 @@
 {
-    "questions" : [
-        {
-            "question": "Os 4 pilares do paradigma de Orientação a Objetos são:",
-            "a" : "Sequenciamento, Procedimento, Bibliotecas, Herança",
-            "b" : "Herança, Polimorfismo, Classes, Objetos",
-            "c" : "Classes, Atributos, Métodos, Abstração",
-            "d" : "Abstração, Encapsulamento, Herança, Polimorfismo",
-            "answer": "D"
-        }
-    ]
+  "questions": [
+    {
+      "question": "Os 4 pilares do paradigma de Orientação a Objetos são:",
+      "a" : "Sequenciamento, Procedimento, Bibliotecas, Herança",
+      "b" : "Herança, Polimorfismo, Classes, Objetos",
+      "c" : "Classes, Atributos, Métodos, Abstração",
+      "d" : "Abstração, Encapsulamento, Herança, Polimorfismo",
+      "answer": "D"
+    }
+  ]
 }

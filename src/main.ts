@@ -6,7 +6,7 @@ import { requestZoneFromJSON } from "./GameZone";
 import { Door } from "./Door";
 import { AssetsManager } from "./AssetsManager";
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
   "use strict";
 
   //// CONSTANTS ////
@@ -171,15 +171,32 @@ window.addEventListener("load", () => {
 
   window.addEventListener("resize", resize);
 
-  requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
-    gameWorld.setup(zone);
-    gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
-    gameWorld.addCoffeeEventListener(coffeeCollisionListener);
+  const startScreen = await assetsManager.getOrLoadImage(
+    "game-menu",
+    "sprite_sheets/menu.png"
+  );
 
-    gameWorld.loadSprites().then(() => {
-      document.body.appendChild(pStats);
-      resize();
-      engine.start();
-    });
+  let gameStarted = false;
+
+  console.log("aqui");
+  console.log(startScreen);
+
+  display.drawImage(startScreen);
+
+  window.addEventListener("keydown", e => {
+    if (e.key == " " && !gameStarted) {
+      gameStarted = true;
+      requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
+        gameWorld.setup(zone);
+        gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
+        gameWorld.addCoffeeEventListener(coffeeCollisionListener);
+
+        gameWorld.loadSprites().then(() => {
+          document.body.appendChild(pStats);
+          resize();
+          engine.start();
+        });
+      });
+    }
   });
 });
