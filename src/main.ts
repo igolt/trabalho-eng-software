@@ -160,7 +160,6 @@ window.addEventListener("load", () => {
     "color:#ffffff; font-size:2.0em; position:fixed"
   );
   pStats.innerHTML = "Coffee: 0";
-  document.body.appendChild(pStats);
 
   ////////////////////
   //// INITIALIZE ////
@@ -178,6 +177,7 @@ window.addEventListener("load", () => {
     gameWorld.addCoffeeEventListener(coffeeCollisionListener);
 
     gameWorld.loadSprites().then(() => {
+      document.body.appendChild(pStats);
       resize();
       engine.start();
     });
