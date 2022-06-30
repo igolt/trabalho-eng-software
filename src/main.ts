@@ -179,6 +179,7 @@ window.addEventListener("load", async () => {
   let gameStarted = false;
 
   display.drawImage(startScreen);
+  resize();
 
   window.addEventListener("keydown", e => {
     if (e.key == " " && !gameStarted) {
