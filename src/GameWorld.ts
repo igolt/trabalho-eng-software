@@ -1,4 +1,4 @@
-import { Carrot } from "./Carrot";
+import { Coffee } from "./Coffee";
 import { Door } from "./Door";
 import { GamePlayer } from "./GamePlayer";
 import { IZone, TileSet } from "./GameZone";
@@ -8,7 +8,7 @@ import { MovableGameObject } from "./MovableGameObject";
 import { AssetsManager } from "./AssetsManager";
 
 type DoorCollisionListener = (door: Door) => void;
-type CarrotCollisionListener = (carrot: Carrot) => void;
+type CoffeeCollisionListener = (coffee: Coffee) => void;
 
 // WARN(igolt): remover isso depois
 const defaultTileSet = {
@@ -25,8 +25,8 @@ export class GameWorld {
   private friction: number;
   private gravity: number;
   private assetsManager: AssetsManager;
-  private _carrots: Array<Carrot>;
-  private _carrotsCount: number;
+  private _coffees: Array<Coffee>;
+  private _coffeesCount: number;
   private _grass: Array<Grass>;
   private doors: Array<Door>;
   private zone?: IZone;
@@ -38,10 +38,10 @@ export class GameWorld {
   private _columns: number;
   private _rows: number;
   private doorListeners: Array<DoorCollisionListener>;
-  private carrotListeners: Array<CarrotCollisionListener>;
+  private coffeeListeners: Array<CoffeeCollisionListener>;
 
-  public carrotsCount(): number {
-    return this._carrotsCount;
+  public coffeeCount(): number {
+    return this._coffeesCount;
   }
 
   public constructor(
@@ -60,8 +60,8 @@ export class GameWorld {
     // WARN(igolt): valores chutados, depois verificar isso aqui
     this._player = new GamePlayer(32, 76, assetsManager);
 
-    this._carrots = [];
-    this._carrotsCount = 0;
+    this._coffees = [];
+    this._coffeesCount = 0;
     this.doors = [];
 
     this._grass = [];
@@ -70,7 +70,7 @@ export class GameWorld {
     this._width = this.tileSet.tileSize * this._columns;
 
     this.doorListeners = [];
-    this.carrotListeners = [];
+    this.coffeeListeners = [];
   }
 
   public tileSize(): number {
@@ -78,7 +78,7 @@ export class GameWorld {
   }
 
   public setup(zone: IZone) {
-    this._carrots = new Array();
+    this._coffees = new Array();
     this.doors = new Array();
     this._grass = new Array();
     this.zone = zone;
@@ -86,11 +86,11 @@ export class GameWorld {
     this._rows = zone.rows;
     this.tileSet = zone.tileSet;
 
-    zone.carrots.forEach(carrotInfo => {
-      this._carrots.push(
-        new Carrot(
-          carrotInfo[0] * this.tileSize() + 5,
-          carrotInfo[1] * this.tileSize() - 2,
+    zone.coffees.forEach(coffeeInfo => {
+      this._coffees.push(
+        new Coffee(
+          coffeeInfo[0] * this.tileSize() + 5,
+          coffeeInfo[1] * this.tileSize() - 2,
           this.assetsManager
         )
       );
@@ -185,16 +185,16 @@ export class GameWorld {
 
     this.collideObject(this._player);
 
-    for (let index = this._carrots.length - 1; index > -1; --index) {
-      let carrot = this._carrots[index];
+    for (let index = this._coffees.length - 1; index > -1; --index) {
+      let coffee = this._coffees[index];
 
-      carrot.updatePosition();
-      carrot.animate();
+      coffee.updatePosition();
+      coffee.animate();
 
-      if (carrot.collideObject(this._player)) {
-        this._carrots.splice(this._carrots.indexOf(carrot), 1);
-        this._carrotsCount++;
-        this.emitCarrotCollisionEvent(carrot);
+      if (coffee.collideObject(this._player)) {
+        this._coffees.splice(this._coffees.indexOf(coffee), 1);
+        this._coffeesCount++;
+        this.emitCoffeeCollisionEvent(coffee);
       }
     }
 
@@ -254,8 +254,8 @@ export class GameWorld {
     throw new Error("zone undefined");
   }
 
-  public carrots() {
-    return this._carrots;
+  public coffees() {
+    return this._coffees;
   }
 
   public player() {
@@ -270,23 +270,23 @@ export class GameWorld {
     this.doorListeners.push(listener);
   }
 
-  public addCarrotCollisionEventListener(listener: CarrotCollisionListener) {
-    this.carrotListeners.push(listener);
+  public addCoffeeEventListener(listener: CoffeeCollisionListener) {
+    this.coffeeListeners.push(listener);
   }
 
   private emitDoorCollisionEvent(door: Door) {
     this.doorListeners.forEach(listener => listener(door));
   }
 
-  private emitCarrotCollisionEvent(carrot: Carrot) {
-    this.carrotListeners.forEach(listener => listener(carrot));
+  private emitCoffeeCollisionEvent(coffee: Coffee) {
+    this.coffeeListeners.forEach(listener => listener(coffee));
   }
 
   public async loadSprites() {
     if (this.zone) {
       await this.zone.loadSprite();
     }
-    this._carrots.forEach(async carrot => await carrot.loadSprite());
+    this._coffees.forEach(async coffee => await coffee.loadSprite());
     this._grass.forEach(async grass => await grass.loadSprite());
     await this.player().loadSprite();
   }

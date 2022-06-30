@@ -11,7 +11,7 @@ window.addEventListener("load", () => {
 
   //// CONSTANTS ////
 
-  const INITIAL_ZONE_ID = "00";
+  const INITIAL_ZONE_ID = "secret01";
 
   ///////////////////
   //// FUNCTIONS ////
@@ -44,18 +44,18 @@ window.addEventListener("load", () => {
       gameWorld.tileSize()
     );
 
-    for (let index = gameWorld.carrots().length - 1; index > -1; --index) {
-      const carrot = gameWorld.carrots()[index];
-      const frame = carrot.frame();
+    for (let index = gameWorld.coffees().length - 1; index > -1; --index) {
+      const coffee = gameWorld.coffees()[index];
+      const frame = coffee.frame();
 
       display.drawObject(
-        carrot.spriteSheet(),
+        coffee.spriteSheet(),
         frame.x,
         frame.y,
-        carrot.getX() +
-          Math.floor(carrot.width() * 0.5 - frame.width * 0.5) +
+        coffee.getX() +
+          Math.floor(coffee.width() * 0.5 - frame.width * 0.5) +
           frame.offsetX,
-        carrot.getY() + frame.offsetY,
+        coffee.getY() + frame.offsetY,
         frame.width,
         frame.height
       );
@@ -93,8 +93,8 @@ window.addEventListener("load", () => {
     display.render();
   };
 
-  const carrotCollisionListener = () =>
-    (pStats.innerHTML = "Coffe: " + gameWorld.carrotsCount());
+  const coffeeCollisionListener = () =>
+    (pStats.innerHTML = "Coffee: " + gameWorld.coffeeCount());
 
   const playerController = () => {
     if (controller.left.isDown()) {
@@ -159,7 +159,7 @@ window.addEventListener("load", () => {
     "style",
     "color:#ffffff; font-size:2.0em; position:fixed"
   );
-  pStats.innerHTML = "Coffe: 0";
+  pStats.innerHTML = "Coffee: 0";
   document.body.appendChild(pStats);
 
   ////////////////////
@@ -175,7 +175,7 @@ window.addEventListener("load", () => {
   requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
     gameWorld.setup(zone);
     gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
-    gameWorld.addCarrotCollisionEventListener(carrotCollisionListener);
+    gameWorld.addCoffeeEventListener(coffeeCollisionListener);
 
     gameWorld.loadSprites().then(() => {
       resize();

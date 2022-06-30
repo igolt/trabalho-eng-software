@@ -3,36 +3,33 @@ import { AssetsManager } from "./AssetsManager";
 import { GameObject } from "./GameObject";
 import { Frame } from "./Frame";
 
-const carrotFrames = [
-  new Frame(81, 112, 14, 16),
-  new Frame(96, 112, 16, 16), // carrot
-];
+const coffeeFrames = [new Frame(81, 112, 14, 16), new Frame(96, 112, 16, 16)];
 
-const carrotFrameSet = [0, 1];
+const coffeeFrameSet = [0, 1];
 
-export class Carrot extends GameObject implements IAnimation {
+export class Coffee extends GameObject implements IAnimation {
   private animation: Animation;
   private baseX: number;
   private baseY: number;
   private positionX: number;
   private positionY: number;
-  public static readonly SPRITE_KEY = "game-carrot";
-  public static readonly SPRITE_URL = "sprite_sheets/tileset3.png";
+  public static readonly SPRITE_KEY = "game-coffee";
+  public static readonly SPRITE_URL = "sprite_sheets/rabbit-trap3.png";
 
   public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(x, y, 7, 14);
 
     this.animation = new Animation(
-      carrotFrames,
-      carrotFrameSet,
+      coffeeFrames,
+      coffeeFrameSet,
       15,
       assetsManager,
       {
-        key: Carrot.SPRITE_KEY,
-        url: Carrot.SPRITE_URL,
+        key: Coffee.SPRITE_KEY,
+        url: Coffee.SPRITE_URL,
       }
     );
-    // baseX e baseY são o ponto no qual a carrot se move. positionX
+    // baseX e baseY são o ponto no qual o café se move. positionX
     // e y são usados para acompanhar o vetor distante do ponto base para dar
     // a cenoura um efeito flutuante
     this.baseX = x;

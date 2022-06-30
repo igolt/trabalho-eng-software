@@ -10,7 +10,7 @@ export interface TileSet {
   tileSize: number;
 }
 
-type CarrotInfo = [number, number];
+type CoffeeInfo = [number, number];
 type GrassInfo = [number, number];
 
 type DoorInfo = {
@@ -32,7 +32,7 @@ interface IZoneBase {
   id: string;
 
   tileSet: TileSet;
-  carrots: Array<CarrotInfo>;
+  coffees: Array<CoffeeInfo>;
   grass: Array<GrassInfo>;
   doors: Array<DoorInfo>;
 
