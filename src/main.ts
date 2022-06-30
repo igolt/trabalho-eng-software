@@ -178,9 +178,6 @@ window.addEventListener("load", async () => {
 
   let gameStarted = false;
 
-  console.log("aqui");
-  console.log(startScreen);
-
   display.drawImage(startScreen);
 
   window.addEventListener("keydown", e => {
