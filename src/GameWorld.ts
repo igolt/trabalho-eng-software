@@ -39,6 +39,7 @@ export class GameWorld {
   private _rows: number;
   private doorListeners: Array<DoorCollisionListener>;
   private coffeeListeners: Array<CoffeeCollisionListener>;
+  private coffeeState: Map<string, Coffee[]>;
 
   public coffeeCount(): number {
     return this._coffeesCount;
@@ -69,6 +70,7 @@ export class GameWorld {
     this._height = this.tileSet.tileSize * this._rows;
     this._width = this.tileSet.tileSize * this._columns;
 
+    this.coffeeState = new Map<string, Coffee[]>();
     this.doorListeners = [];
     this.coffeeListeners = [];
   }
@@ -78,7 +80,9 @@ export class GameWorld {
   }
 
   public setup(zone: IZone) {
-    this._coffees = new Array();
+    if (this.zone) {
+      this.coffeeState.set(this.zone.id, this._coffees);
+    }
     this.doors = new Array();
     this._grass = new Array();
     this.zone = zone;
@@ -86,15 +90,22 @@ export class GameWorld {
     this._rows = zone.rows;
     this.tileSet = zone.tileSet;
 
-    zone.coffees.forEach(coffeeInfo => {
-      this._coffees.push(
-        new Coffee(
-          coffeeInfo[0] * this.tileSize() + 5,
-          coffeeInfo[1] * this.tileSize() - 2,
-          this.assetsManager
-        )
-      );
-    });
+    const saveCoffees = this.coffeeState.get(zone.id);
+
+    if (saveCoffees) {
+      this._coffees = saveCoffees;
+    } else {
+      this._coffees = new Array();
+      zone.coffees.forEach(coffeeInfo => {
+        this._coffees.push(
+          new Coffee(
+            coffeeInfo[0] * this.tileSize() + 5,
+            coffeeInfo[1] * this.tileSize() - 2,
+            this.assetsManager
+          )
+        );
+      });
+    }
 
     zone.doors.forEach(doorInfo => {
       this.doors.push(

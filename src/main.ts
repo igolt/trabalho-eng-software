@@ -11,7 +11,7 @@ window.addEventListener("load", () => {
 
   //// CONSTANTS ////
 
-  const INITIAL_ZONE_ID = "secret01";
+  const INITIAL_ZONE_ID = "00";
 
   ///////////////////
   //// FUNCTIONS ////
