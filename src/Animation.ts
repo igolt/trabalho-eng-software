@@ -20,7 +20,7 @@ export interface IAnimation {
   loadSprite: () => Promise<void>;
 }
 
-const isImage = (obj: any): obj is HTMLImageElement =>
+const isImage = (obj: unknown): obj is HTMLImageElement =>
   obj instanceof HTMLImageElement;
 
 export class Animation implements IAnimation {

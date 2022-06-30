@@ -49,7 +49,7 @@ export type IZone = IZoneBase & {
 
 type ZoneInfoWithCollisionMap = IZoneBase & {
   graphicalMap: number[];
-  collisionMap?: number[];
+  collisionMap: number[];
 };
 
 type ZoneInfoWithoutCollisionMap = IZoneBase & {
@@ -58,7 +58,7 @@ type ZoneInfoWithoutCollisionMap = IZoneBase & {
 
 type ZoneInfo = ZoneInfoWithCollisionMap | ZoneInfoWithoutCollisionMap;
 
-const isImage = (obj: any): obj is HTMLImageElement =>
+const isImage = (obj: unknown): obj is HTMLImageElement =>
   obj instanceof HTMLImageElement;
 
 const ZONE_PREFIX = "../zones/zone";
@@ -67,7 +67,7 @@ const ZONE_SUFFIX = ".json";
 const _getZoneUrlById = (id: string) => ZONE_PREFIX + id + ZONE_SUFFIX;
 
 // TODO(igolt): fazer a validação da zona
-const isZoneInfo = (_: any): _ is ZoneInfo => true;
+const isZoneInfo = (_: unknown): _ is ZoneInfo => true;
 
 const hasCollisionMap = (
   zoneInfo: ZoneInfo
@@ -75,9 +75,9 @@ const hasCollisionMap = (
 
 const parseGraphicalAndCollisionMap = (
   zoneInfo: ZoneInfoWithoutCollisionMap
-) => {
-  const newGraphicalMap: number[] = [];
-  const collisionMap: number[] = [];
+): ZoneInfoWithCollisionMap => {
+  const newGraphicalMap: GraphicalMap = [];
+  const collisionMap: CollisionMap = [];
 
   zoneInfo.graphicalMap.forEach(value => {
     newGraphicalMap.push(value[0] * zoneInfo.columns + value[1]);
@@ -91,16 +91,17 @@ const parseGraphicalAndCollisionMap = (
   };
 };
 
-const zoneInfoToZone = (zoneInfo: any, assetsManager: AssetsManager): IZone => {
-  if (!hasCollisionMap(zoneInfo)) {
-    zoneInfo = parseGraphicalAndCollisionMap(zoneInfo);
-  }
+const zoneInfoToZone = (
+  zoneInfo: ZoneInfo,
+  assetsManager: AssetsManager
+): IZone => {
+  const zone: ZoneInfoWithCollisionMap = hasCollisionMap(zoneInfo)
+    ? zoneInfo
+    : parseGraphicalAndCollisionMap(zoneInfo);
 
-  const zone: IZone = zoneInfo as IZone;
-
-  return Object.assign(zoneInfo, {
+  return {
+    ...zone,
     assetsManager: assetsManager,
-
     loadSprite: async () => {
       if (!isImage(zone.tileSet.spriteSheet)) {
         zone.tileSet.spriteSheet = await assetsManager.getOrLoadImage(
@@ -109,14 +110,13 @@ const zoneInfoToZone = (zoneInfo: any, assetsManager: AssetsManager): IZone => {
         );
       }
     },
-
     tileSetImage: () => {
       if (isImage(zone.tileSet.spriteSheet)) {
         return zone.tileSet.spriteSheet;
       }
       throw new Error("Zone::tileSetImage: spritesheet not loaded");
     },
-  });
+  };
 };
 
 export const requestZoneFromJSON = async (

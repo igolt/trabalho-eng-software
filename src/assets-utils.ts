@@ -1,6 +1,6 @@
 const REQUEST_OPTS = { once: true };
 
-export const requestJSON = (url: string | URL) =>
+export const requestJSON = (url: string | URL): Promise<JSON> =>
   new Promise(resolve => {
     const request = new XMLHttpRequest();
     const callback = () => resolve(JSON.parse(request.responseText));

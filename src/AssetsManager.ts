@@ -22,7 +22,7 @@ async function _loadTemplate<T>(
 export class AssetsManager {
   private _loadedImages: Map<string, HTMLImageElement>;
   private _loadedAudios: Map<string, HTMLAudioElement>;
-  private _loadedJsons: Map<string, any>;
+  private _loadedJsons: Map<string, JSON>;
   private _channels: Channel[];
   public static readonly MAX_CHANNELS = 20;
 
@@ -30,7 +30,7 @@ export class AssetsManager {
     this._channels = [];
     this._loadedImages = new Map<string, HTMLImageElement>();
     this._loadedAudios = new Map<string, HTMLAudioElement>();
-    this._loadedJsons = new Map<string, any>();
+    this._loadedJsons = new Map<string, JSON>();
 
     for (let i = 0; i < AssetsManager.MAX_CHANNELS; i++) {
       this._channels[i] = {

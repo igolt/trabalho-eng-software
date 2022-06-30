@@ -197,7 +197,7 @@ export class GameWorld {
     this.collideObject(this._player);
 
     for (let index = this._coffees.length - 1; index > -1; --index) {
-      let coffee = this._coffees[index];
+      const coffee = this._coffees[index];
 
       coffee.updatePosition();
       coffee.animate();
@@ -210,7 +210,7 @@ export class GameWorld {
     }
 
     for (let index = this.doors.length - 1; index > -1; --index) {
-      let door = this.doors[index];
+      const door = this.doors[index];
 
       if (door.collideObjectCenter(this._player)) {
         this.emitDoorCollisionEvent(door);
@@ -218,7 +218,7 @@ export class GameWorld {
     }
 
     for (let index = this._grass.length - 1; index > -1; --index) {
-      let grass = this._grass[index];
+      const grass = this._grass[index];
 
       grass.animate();
     }
