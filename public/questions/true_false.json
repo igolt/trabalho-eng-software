@@ -1,0 +1,64 @@
+{
+    "questions" : [
+        { 
+            "question": "A sobrescrita permite que, em uma mesma classe, tenhamos vários métodos com o mesmo nome, mas com assinatura diferente.", 
+            "answer": "F" 
+        },
+        { 
+            "question": "Objetos são instâncias de uma classe que possui os atributos e as operações definidas na classe.", 
+            "answer": "V" 
+        },
+        {
+            "question":"Superclasse é uma especialização de um conjunto de classes através da herança.",
+            "answer": "F"
+        },
+        {
+            "question": "A Sobrecarga possibilita que o mesmo nome possa ser utilizado em diferentes métodos em uma mesma classe, desde que, por exemplo, as quantidades de parâmetros sejam diferentes.",
+            "answer": "V"
+        },
+        {
+            "question": "Classe encapsula dados para descrever o conteúdo de alguma entidade do mundo real.",
+            "answer": "V"
+        },
+        {
+            "question": "O processo de construir novas classes a partir de uma já existente é chamada de Herança.",
+            "answer": "V"
+        },
+        {
+            "question": "Se uma classe C é derivada da classe B, que é derivada da classe A, tudo através de herança pública, então um membro da classe C consegue acessar dados protegidos de A e B.",
+            "answer": "V"
+        },
+        {
+            "question": "O mecanismo de derivar uma classe de outra classe derivada é chamada de Polimorfismo.",
+            "answer": "F"
+        },
+        {
+            "question": "O processo de construir novas classes a partir de uma já existente é chamada de Template.",
+            "answer": "F"
+        },
+        {
+            "question": "Membros estáticos só podem ser utilizadas em funções estáticas.",
+            "answer": "V"
+        },
+        {
+            "question": "Os membros de uma classe, por definição, são definidos como públicos",
+            "answer": "F"
+        },
+        {
+            "question": "Uma classe só pode haver 1 construtor.",
+            "answer": "F"
+        },
+        {
+            "question": "Um construtor deve ser declarado como público.",
+            "answer": "V"
+        },
+        {
+            "question": "Uma vez que uma classe é criada, ela nunca mais poderá ser alterada.",
+            "answer": "F"
+        },
+        {
+            "question": "O método de esconder detalhes desnecessários de implementação é chamado de Abstração.",
+            "answer": "V"
+        }
+    ]
+}
