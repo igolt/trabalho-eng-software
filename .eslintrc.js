@@ -1,6 +1,10 @@
 module.exports = {
   root: true,
-  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+  ],
   plugins: ["@typescript-eslint"],
   parser: "@typescript-eslint/parser",
   ignorePatterns: [".eslintrc.js", "webpack.config.js"],
