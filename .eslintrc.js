@@ -18,6 +18,7 @@ module.exports = {
     "@typescript-eslint/no-empty-function": "warn",
     "@typescript-eslint/no-unused-vars": "error",
     camelcase: "error",
+    curly: ["error", "all"],
     "no-console": "warn",
     "no-nested-ternary": "error",
     "no-redeclare": "error",
