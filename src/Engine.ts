@@ -50,7 +50,7 @@ export class Engine {
   }
 
   private requestAnimationFrame() {
-    this.animationFrameRequest = window.requestAnimationFrame((timeStep) =>
+    this.animationFrameRequest = window.requestAnimationFrame(timeStep =>
       this.run(timeStep)
     );
   }
@@ -61,9 +61,14 @@ export class Engine {
     this.requestAnimationFrame();
   }
 
+  public isRunning(): boolean {
+    return this.animationFrameRequest !== undefined;
+  }
+
   public stop() {
-    if (this.animationFrameRequest) {
-      window.cancelAnimationFrame(this.animationFrameRequest);
+    if (this.isRunning()) {
+      window.cancelAnimationFrame(this.animationFrameRequest as number);
+      this.animationFrameRequest = undefined;
     }
   }
 }

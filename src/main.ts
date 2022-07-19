@@ -17,6 +17,21 @@ window.addEventListener("load", async () => {
   //// FUNCTIONS ////
   ///////////////////
 
+  const startGame = () => {
+    gameStarted = true;
+    requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
+      gameWorld.setup(zone);
+      gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
+      gameWorld.addCoffeeEventListener(coffeeCollisionListener);
+
+      gameWorld.loadSprites().then(() => {
+        document.body.appendChild(pStats);
+        resize();
+        engine.start();
+      });
+    });
+  };
+
   const resize = () => {
     display.resize(
       document.documentElement.clientWidth,
@@ -153,13 +168,16 @@ window.addEventListener("load", async () => {
   const assetsManager = new AssetsManager();
   const gameWorld = new GameWorld(assetsManager);
   const engine = new Engine(1000 / 30, render, update);
+  const startScreen = assetsManager.getOrLoadImage(
+    "game-menu",
+    "sprite_sheets/menu.png"
+  );
 
   const pStats = document.createElement("pStats");
-  pStats.setAttribute(
-    "style",
-    "color:#ffffff; font-size:2.0em; position:fixed"
-  );
+  pStats.setAttribute("style", "color:#ffffff; font-size: 2em; position:fixed");
   pStats.innerHTML = "Coffee: 0";
+
+  let gameStarted = false;
 
   ////////////////////
   //// INITIALIZE ////
@@ -171,30 +189,22 @@ window.addEventListener("load", async () => {
 
   window.addEventListener("resize", resize);
 
-  const startScreen = await assetsManager.getOrLoadImage(
-    "game-menu",
-    "sprite_sheets/menu.png"
-  );
-
-  let gameStarted = false;
-
-  display.drawImage(startScreen);
+  display.drawImage(await startScreen);
   resize();
 
-  window.addEventListener("keydown", e => {
-    if (e.key == " " && !gameStarted) {
-      gameStarted = true;
-      requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
-        gameWorld.setup(zone);
-        gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
-        gameWorld.addCoffeeEventListener(coffeeCollisionListener);
-
-        gameWorld.loadSprites().then(() => {
-          document.body.appendChild(pStats);
-          resize();
+  window.addEventListener("keypress", e => {
+    if (gameStarted) {
+      if (e.key == "p") {
+        if (engine.isRunning()) {
+          engine.stop();
+        } else {
           engine.start();
-        });
-      });
+        }
+      }
+    } else {
+      if (e.key == " ") {
+        startGame();
+      }
     }
   });
 });
