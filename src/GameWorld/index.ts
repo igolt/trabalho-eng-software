@@ -1,20 +1,20 @@
-import { Coffee } from "./Coffee";
-import { Door } from "./Door";
-import { GamePlayer } from "./GamePlayer";
-import { IZone, ITileSet } from "./GameZone";
-import { Grass } from "./Grass";
-import { collide } from "./collision";
-import { MovableGameObject } from "./MovableGameObject";
-import { AssetsManager } from "./AssetsManager";
+import { Coffee } from "../Coffee";
+import { Door } from "../Door";
+import { GamePlayer } from "../GamePlayer";
+import { IZone, ITileSet } from "../GameZone";
+import { Grass } from "../Grass";
+import { collide } from "../collision";
+import { MovableGameObject } from "../MovableGameObject";
+import { AssetsManager } from "../AssetsManager";
+import { GameWorldNoZoneLoadedException } from "./GameWorldNoZoneException";
 
 type DoorCollisionListener = (door: Door) => void;
 type CoffeeCollisionListener = (coffee: Coffee) => void;
 
-// WARN(igolt): remover isso depois
-const defaultTileSet = {
+const menuTileSet = {
   spriteSheet: {
-    key: "invalid-key",
-    url: "invalid-url",
+    key: "-",
+    url: "-",
   },
   columns: 8,
   rows: 8,
@@ -33,6 +33,7 @@ export class GameWorld {
   private tileSet: ITileSet;
   // TODO(igolt): isso aqui vai mover pra outro lugar
   private _player: GamePlayer;
+  // NOTE(igolt): Não sei se esses atributos ainda vão ficar aqui
   private _height: number;
   private _width: number;
   private _columns: number;
@@ -57,7 +58,7 @@ export class GameWorld {
     this._columns = 12;
     this._rows = 9;
 
-    this.tileSet = defaultTileSet;
+    this.tileSet = menuTileSet;
     // WARN(igolt): valores chutados, depois verificar isso aqui
     this._player = new GamePlayer(32, 76, assetsManager);
 
@@ -136,13 +137,14 @@ export class GameWorld {
     if (this.zone) {
       return this.zone.collisionMap[idx];
     }
-    throw new Error("zone does not exist");
+    throw new GameWorldNoZoneLoadedException("getCollisionMapValue");
   }
 
   public collideObject(object: MovableGameObject) {
     if (!this.zone) {
-      throw new Error("this.zone is undefined");
+      throw new GameWorldNoZoneLoadedException("collideObject");
     }
+
     let bottom: number, left: number, right: number, top: number, value: number;
     const zone = this.zone;
 
@@ -238,7 +240,7 @@ export class GameWorld {
     if (this.zone) {
       return this.zone.id;
     }
-    throw new Error("zone is undefined");
+    throw new GameWorldNoZoneLoadedException("zoneId");
   }
 
   public height(): number {
@@ -249,7 +251,6 @@ export class GameWorld {
     return this._width;
   }
 
-  // FIX: não sei pq esses valores
   public columns(): number {
     return this._columns;
   }
@@ -262,7 +263,7 @@ export class GameWorld {
     if (this.zone) {
       return this.zone.graphicalMap;
     }
-    throw new Error("zone undefined");
+    throw new GameWorldNoZoneLoadedException("graphicalMap");
   }
 
   public coffees() {
@@ -303,9 +304,9 @@ export class GameWorld {
   }
 
   public tileSetImage() {
-    if (!this.zone) {
-      throw new Error("GameWorld::tileSetImage: no zone loaded");
+    if (this.zone) {
+      return this.zone.tileSetImage();
     }
-    return this.zone.tileSetImage();
+    throw new GameWorldNoZoneLoadedException("tileSetImage");
   }
 }
