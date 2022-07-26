@@ -1,5 +1,5 @@
 import { AssetsManager } from "./AssetsManager";
-import { SpriteSheet } from "./Animation";
+import { SpriteSheet } from "./GameAnimation";
 
 export interface ITileSet {
   spriteSheet: SpriteSheet;
@@ -10,6 +10,7 @@ export interface ITileSet {
 
 type CoffeeInfo = [number, number];
 type GrassInfo = [number, number];
+type AppleInfo = [number, number];
 
 type DoorInfo = {
   x: number;
@@ -40,19 +41,24 @@ interface IZoneBase {
   tileSetImage(): HTMLImageElement;
 }
 
-export type IZone = IZoneBase & {
+export interface IZone extends IZoneBase {
+  apples: AppleInfo[];
   assetsManager: AssetsManager;
   graphicalMap: GraphicalMap;
   collisionMap: CollisionMap;
   loadSprite: () => Promise<void>;
-};
+}
 
-type ZoneInfoWithCollisionMap = IZoneBase & {
+interface IZoneInfoBase extends IZoneBase {
+  apples?: AppleInfo[];
+}
+
+type ZoneInfoWithCollisionMap = IZoneInfoBase & {
   graphicalMap: number[];
   collisionMap: number[];
 };
 
-type ZoneInfoWithoutCollisionMap = IZoneBase & {
+type ZoneInfoWithoutCollisionMap = IZoneInfoBase & {
   graphicalMap: [number, number, number][];
 };
 
@@ -116,6 +122,7 @@ const zoneInfoToZone = (
       }
       throw new Error("Zone::tileSetImage: spritesheet not loaded");
     },
+    apples: zoneInfo.apples ?? [],
   };
 };
 

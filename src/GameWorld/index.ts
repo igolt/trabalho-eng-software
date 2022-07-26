@@ -7,9 +7,11 @@ import { collide } from "../collision";
 import { MovableGameObject } from "../MovableGameObject";
 import { AssetsManager } from "../AssetsManager";
 import { GameWorldNoZoneLoadedException } from "./GameWorldNoZoneException";
+import { Collectible } from "src/Collectible";
+import { Apple } from "../Apple";
 
 type DoorCollisionListener = (door: Door) => void;
-type CoffeeCollisionListener = (coffee: Coffee) => void;
+type CollectibleCollisionListener = (collectible: Collectible) => void;
 
 const menuTileSet = {
   spriteSheet: {
@@ -25,8 +27,8 @@ export class GameWorld {
   private friction: number;
   private gravity: number;
   private assetsManager: AssetsManager;
-  private _coffees: Coffee[];
-  private _coffeesCount: number;
+  private _collectibles: Collectible[];
+  private _collectiblesCount: number;
   private _grass: Grass[];
   private doors: Door[];
   private zone?: IZone;
@@ -39,11 +41,11 @@ export class GameWorld {
   private _columns: number;
   private _rows: number;
   private doorListeners: DoorCollisionListener[];
-  private coffeeListeners: CoffeeCollisionListener[];
-  private coffeeState: Map<string, Coffee[]>;
+  private collectiblesEventListener: CollectibleCollisionListener[];
+  private collectibleState: Map<string, Collectible[]>;
 
-  public coffeeCount(): number {
-    return this._coffeesCount;
+  public collectibleCount(): number {
+    return this._collectiblesCount;
   }
 
   public constructor(
@@ -62,8 +64,8 @@ export class GameWorld {
     // WARN(igolt): valores chutados, depois verificar isso aqui
     this._player = new GamePlayer(32, 76, assetsManager);
 
-    this._coffees = [];
-    this._coffeesCount = 0;
+    this._collectibles = [];
+    this._collectiblesCount = 0;
     this.doors = [];
 
     this._grass = [];
@@ -71,9 +73,9 @@ export class GameWorld {
     this._height = this.tileSet.tileSize * this._rows;
     this._width = this.tileSet.tileSize * this._columns;
 
-    this.coffeeState = new Map<string, Coffee[]>();
+    this.collectibleState = new Map<string, Collectible[]>();
     this.doorListeners = [];
-    this.coffeeListeners = [];
+    this.collectiblesEventListener = [];
   }
 
   public tileSize(): number {
@@ -82,7 +84,7 @@ export class GameWorld {
 
   public setup(zone: IZone) {
     if (this.zone) {
-      this.coffeeState.set(this.zone.id, this._coffees);
+      this.collectibleState.set(this.zone.id, this._collectibles);
     }
     this.doors = [];
     this._grass = [];
@@ -91,15 +93,25 @@ export class GameWorld {
     this._rows = zone.rows;
     this.tileSet = zone.tileSet;
 
-    const saveCoffees = this.coffeeState.get(zone.id);
+    const saveCollectibles = this.collectibleState.get(zone.id);
 
-    if (saveCoffees) {
-      this._coffees = saveCoffees;
+    if (saveCollectibles) {
+      this._collectibles = saveCollectibles;
     } else {
-      this._coffees = [];
+      this._collectibles = [];
       zone.coffees.forEach(coffeeInfo => {
-        this._coffees.push(
+        this._collectibles.push(
           new Coffee(
+            coffeeInfo[0] * this.tileSize() + 5,
+            coffeeInfo[1] * this.tileSize() - 2,
+            this.assetsManager
+          )
+        );
+      });
+
+      zone.apples.forEach(coffeeInfo => {
+        this._collectibles.push(
+          new Apple(
             coffeeInfo[0] * this.tileSize() + 5,
             coffeeInfo[1] * this.tileSize() - 2,
             this.assetsManager
@@ -198,16 +210,16 @@ export class GameWorld {
 
     this.collideObject(this._player);
 
-    for (let index = this._coffees.length - 1; index > -1; --index) {
-      const coffee = this._coffees[index];
+    for (let index = this._collectibles.length - 1; index > -1; --index) {
+      const coffee = this._collectibles[index];
 
       coffee.updatePosition();
       coffee.animate();
 
       if (coffee.collideObject(this._player)) {
-        this._coffees.splice(this._coffees.indexOf(coffee), 1);
-        this._coffeesCount++;
-        this.emitCoffeeCollisionEvent(coffee);
+        this._collectibles.splice(this._collectibles.indexOf(coffee), 1);
+        this._collectiblesCount += coffee.points();
+        this.emitCollectibleCollisionEvent(coffee);
       }
     }
 
@@ -266,8 +278,8 @@ export class GameWorld {
     throw new GameWorldNoZoneLoadedException("graphicalMap");
   }
 
-  public coffees() {
-    return this._coffees;
+  public collectibles() {
+    return this._collectibles;
   }
 
   public player() {
@@ -282,23 +294,23 @@ export class GameWorld {
     this.doorListeners.push(listener);
   }
 
-  public addCoffeeEventListener(listener: CoffeeCollisionListener) {
-    this.coffeeListeners.push(listener);
+  public addCollectibleEventListener(listener: CollectibleCollisionListener) {
+    this.collectiblesEventListener.push(listener);
   }
 
   private emitDoorCollisionEvent(door: Door) {
     this.doorListeners.forEach(listener => listener(door));
   }
 
-  private emitCoffeeCollisionEvent(coffee: Coffee) {
-    this.coffeeListeners.forEach(listener => listener(coffee));
+  private emitCollectibleCollisionEvent(collectible: Collectible) {
+    this.collectiblesEventListener.forEach(listener => listener(collectible));
   }
 
   public async loadSprites() {
     if (this.zone) {
       await this.zone.loadSprite();
     }
-    this._coffees.forEach(async coffee => await coffee.loadSprite());
+    this._collectibles.forEach(async c => await c.loadSprite());
     this._grass.forEach(async grass => await grass.loadSprite());
     await this.player().loadSprite();
   }

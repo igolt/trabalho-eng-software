@@ -22,7 +22,7 @@ window.addEventListener("load", async () => {
     requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
       gameWorld.setup(zone);
       gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
-      gameWorld.addCoffeeEventListener(coffeeCollisionListener);
+      gameWorld.addCollectibleEventListener(coffeeCollisionListener);
 
       gameWorld.loadSprites().then(() => {
         document.body.appendChild(pStats);
@@ -59,8 +59,8 @@ window.addEventListener("load", async () => {
       gameWorld.tileSize()
     );
 
-    for (let index = gameWorld.coffees().length - 1; index > -1; --index) {
-      const coffee = gameWorld.coffees()[index];
+    for (let index = gameWorld.collectibles().length - 1; index > -1; --index) {
+      const coffee = gameWorld.collectibles()[index];
       const frame = coffee.frame();
 
       display.drawObject(
@@ -109,7 +109,7 @@ window.addEventListener("load", async () => {
   };
 
   const coffeeCollisionListener = () =>
-    (pStats.innerHTML = "Coffee: " + gameWorld.coffeeCount());
+    (pStats.innerHTML = "Points: " + gameWorld.collectibleCount());
 
   const playerController = () => {
     if (controller.left.isDown()) {
@@ -175,7 +175,7 @@ window.addEventListener("load", async () => {
 
   const pStats = document.createElement("pStats");
   pStats.setAttribute("style", "color:#ffffff; font-size: 2em; position:fixed");
-  pStats.innerHTML = "Coffee: 0";
+  pStats.innerHTML = "Points: 0";
 
   let gameStarted = false;
 

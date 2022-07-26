@@ -1,4 +1,4 @@
-import { Animation } from "./Animation";
+import { GameAnimation } from "./GameAnimation";
 import { AssetsManager } from "./AssetsManager";
 import { Frame } from "./Frame";
 
@@ -10,7 +10,7 @@ const grassFrames = [
 
 const grassFrameSet = [0, 1, 2, 1];
 
-export class Grass extends Animation {
+export class Grass extends GameAnimation {
   public readonly x: number;
   public readonly y: number;
   public static readonly SPRITE_KEY = "game-grass";

@@ -6,7 +6,7 @@ export type FrameSet = number[];
 
 export type SpriteSheet = HTMLImageElement | { key: string; url: string };
 
-export interface IAnimation {
+export interface IGameAnimation {
   frame: () => Frame;
   frameValue: () => number;
   animate: () => void;
@@ -23,7 +23,7 @@ export interface IAnimation {
 const isImage = (obj: unknown): obj is HTMLImageElement =>
   obj instanceof HTMLImageElement;
 
-export class Animation implements IAnimation {
+export class GameAnimation implements IGameAnimation {
   private _frames: Frame[];
   private count: number;
   private delay: number;

@@ -1,4 +1,9 @@
-import { FrameSet, AnimationMode, IAnimation, Animation } from "./Animation";
+import {
+  FrameSet,
+  AnimationMode,
+  IGameAnimation,
+  GameAnimation,
+} from "./GameAnimation";
 import { AssetsManager } from "./AssetsManager";
 import { Frame } from "./Frame";
 import { MovableGameObject } from "./MovableGameObject";
@@ -35,8 +40,8 @@ const playerFrames = [
 const playerDx = 0.55;
 const playerMoveAnimationDelay = 5;
 
-export class GamePlayer extends MovableGameObject implements IAnimation {
-  private animation: Animation;
+export class GamePlayer extends MovableGameObject implements IGameAnimation {
+  private animation: GameAnimation;
   private directionX: PlayerDirection;
   public static readonly SPRITE_KEY = "game-player";
   public static readonly SPRITE_URL = "sprite_sheets/tileset3.png";
@@ -44,7 +49,7 @@ export class GamePlayer extends MovableGameObject implements IAnimation {
   public constructor(x: number, y: number, assetsManager: AssetsManager) {
     super(x, y, 7, 12);
 
-    this.animation = new Animation(
+    this.animation = new GameAnimation(
       playerFrames,
       playerFrameSet["idle-left"],
       10,
