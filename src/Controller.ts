@@ -57,6 +57,7 @@ export class Controller {
         break;
       case " ":
         this.space.update(isDown);
+        break;
     }
   }
 }

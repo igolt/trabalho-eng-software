@@ -20,15 +20,15 @@ const playerFrameSet = {
 const playerFrames = [
   new Frame(115, 96, 13, 16, 0, -4), // idle-left
   new Frame(50, 96, 13, 16, 0, -4), // jump-left
-  new Frame(102, 96, 13, 16, 0, -4),
-  new Frame(89, 96, 13, 16, 0, -4),
-  new Frame(76, 96, 13, 16, 0, -4),
+  new Frame(102, 96, 13, 16, 0, -4), // walk-left
+  new Frame(89, 96, 13, 16, 0, -4), // walk-left
+  new Frame(76, 96, 13, 16, 0, -4), // walk-left
   new Frame(63, 96, 13, 16, 0, -4), // walk-left
   new Frame(0, 112, 13, 16, 0, -4), // idle-right
   new Frame(65, 112, 13, 16, 0, -4), // jump-right
-  new Frame(13, 112, 13, 16, 0, -4),
-  new Frame(26, 112, 13, 16, 0, -4),
-  new Frame(39, 112, 13, 16, 0, -4),
+  new Frame(13, 112, 13, 16, 0, -4), // walk-right
+  new Frame(26, 112, 13, 16, 0, -4), // walk-right
+  new Frame(39, 112, 13, 16, 0, -4), // walk-right
   new Frame(52, 112, 13, 16, 0, -4), // walk-right
 ];
 
@@ -145,11 +145,13 @@ export class GamePlayer extends MovableGameObject implements IAnimation {
     this.setVelocityY(this.velocityY() + gravity);
     this.setVelocityX(this.velocityX() * friction);
 
-    if (Math.abs(this.velocityX()) > this.velocityMax())
+    if (Math.abs(this.velocityX()) > this.velocityMax()) {
       this.setVelocityX(this.velocityMax() * Math.sign(this.velocityX()));
+    }
 
-    if (Math.abs(this.velocityY()) > this.velocityMax())
+    if (Math.abs(this.velocityY()) > this.velocityMax()) {
       this.setVelocityY(this.velocityMax() * Math.sign(this.velocityY()));
+    }
 
     this.setX(this.getX() + this.velocityX());
     this.setY(this.getY() + this.velocityY());
