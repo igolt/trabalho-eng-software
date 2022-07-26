@@ -1,10 +1,5 @@
 import { loadAudio, requestImage, requestJSON } from "./assets-utils";
 
-interface Channel {
-  audio: HTMLAudioElement;
-  end: number;
-}
-
 async function _loadTemplate<T>(
   assetsMap: Map<string, T>,
   key: string,
@@ -18,26 +13,16 @@ async function _loadTemplate<T>(
   return asset;
 }
 
-// NOTE(igolt): lógica de channels/play de áudio deve ser algo separado do AssetsManager
 export class AssetsManager {
   private _loadedImages: Map<string, HTMLImageElement>;
   private _loadedAudios: Map<string, HTMLAudioElement>;
   private _loadedJsons: Map<string, JSON>;
-  private _channels: Channel[];
   public static readonly MAX_CHANNELS = 20;
 
   constructor() {
-    this._channels = [];
     this._loadedImages = new Map<string, HTMLImageElement>();
     this._loadedAudios = new Map<string, HTMLAudioElement>();
     this._loadedJsons = new Map<string, JSON>();
-
-    for (let i = 0; i < AssetsManager.MAX_CHANNELS; i++) {
-      this._channels[i] = {
-        audio: new Audio(),
-        end: -1,
-      };
-    }
   }
 
   public async loadImage(key: string, url: string | URL) {
@@ -87,23 +72,6 @@ export class AssetsManager {
     throw new Error(
       `AssetsManager::getAudio: could not found audio with key: "${key}"`
     );
-  }
-
-  private _play(audio: HTMLAudioElement) {
-    for (let i = 0; i < AssetsManager.MAX_CHANNELS; i++) {
-      const now = new Date();
-
-      if (this._channels[i].end < now.getTime()) {
-        this._channels[i].audio.src = audio.src;
-        this._channels[i].end = now.getTime() + audio.duration * 1000;
-        this._channels[i].audio.play();
-        break;
-      }
-    }
-  }
-
-  public play(key: string) {
-    this._play(this.getAudio(key));
   }
 
   public async loadJSON(key: string, url: string | URL) {
