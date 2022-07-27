@@ -7,8 +7,6 @@ import { Door } from "./Door";
 import { AssetsManager } from "./AssetsManager";
 
 window.addEventListener("load", async () => {
-  "use strict";
-
   //// CONSTANTS ////
 
   const INITIAL_ZONE_ID = "00";
@@ -16,6 +14,19 @@ window.addEventListener("load", async () => {
   ///////////////////
   //// FUNCTIONS ////
   ///////////////////
+
+  const updatePStats = ({
+    life,
+    points,
+  }: {
+    life?: number;
+    points?: number;
+  }) => {
+    const newLife = life ?? gameWorld.player().lifePoints();
+    const newPoints = points ?? gameWorld.collectibleCount();
+
+    pStats.innerHTML = "Points: " + newPoints + "<br>Life: " + newLife;
+  };
 
   const startGame = () => {
     gameStarted = true;
@@ -126,8 +137,7 @@ window.addEventListener("load", async () => {
     display.render();
   };
 
-  const coffeeCollisionListener = () =>
-    (pStats.innerHTML = "Points: " + gameWorld.collectibleCount());
+  const coffeeCollisionListener = () => updatePStats({});
 
   const playerController = () => {
     if (controller.left.isDown()) {
@@ -160,15 +170,8 @@ window.addEventListener("load", async () => {
   };
 
   const endGame = () => {
+    gameStarted = false;
     engine.stop();
-    const endSound = assetsManager.loadAudio(
-      "end-game-sound",
-      "/audio/end-game.mp3"
-    );
-    endSound.onended = () => location.reload();
-    endSound.volume = 0.3;
-    endSound.load();
-    endSound.play();
   };
 
   const enemyCollisionEventListener = () => {
@@ -213,7 +216,7 @@ window.addEventListener("load", async () => {
 
   const pStats = document.createElement("pStats");
   pStats.setAttribute("style", "color:#ffffff; font-size: 2em; position:fixed");
-  pStats.innerHTML = "Points: 0";
+  updatePStats({ life: gameWorld.player().lifePoints(), points: 0 });
 
   let gameStarted = false;
 
