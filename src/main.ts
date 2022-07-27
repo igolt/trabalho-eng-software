@@ -29,7 +29,7 @@ window.addEventListener("load", async () => {
   };
 
   const startGame = () => {
-    gameStarted = true;
+    gameRunning = true;
     requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
       gameWorld.setup(zone);
       gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
@@ -38,6 +38,7 @@ window.addEventListener("load", async () => {
 
       gameWorld.loadSprites().then(() => {
         document.body.appendChild(pStats);
+        document.body.appendChild(questionDiv);
         resize();
         engine.start();
       });
@@ -57,6 +58,11 @@ window.addEventListener("load", async () => {
     pStats.style.left = rectangle.left + "px";
     pStats.style.top = rectangle.top + "px";
     pStats.style.fontSize =
+      (gameWorld.tileSize() * rectangle.height) / gameWorld.height() + "px";
+
+    questionDiv.style.left = rectangle.left + "px";
+    questionDiv.style.bottom = rectangle.top + "px";
+    questionDiv.style.fontSize =
       (gameWorld.tileSize() * rectangle.height) / gameWorld.height() + "px";
   };
 
@@ -152,8 +158,8 @@ window.addEventListener("load", async () => {
     }
   };
 
-  const update = () => {
-    gameWorld.update();
+  const update = (dt: number) => {
+    gameWorld.update(dt);
     playerController();
   };
 
@@ -170,12 +176,17 @@ window.addEventListener("load", async () => {
   };
 
   const endGame = () => {
-    gameStarted = false;
+    gameRunning = false;
     engine.stop();
+    const timeoutHandler = setTimeout(() => {
+      clearTimeout(timeoutHandler);
+      location.reload();
+    }, 1000);
   };
 
   const enemyCollisionEventListener = () => {
     gameWorld.player().dealDamage(1);
+    updatePStats({});
 
     if (gameWorld.player().lifePoints() == 0) {
       endGame();
@@ -214,11 +225,21 @@ window.addEventListener("load", async () => {
     "sprite_sheets/menu.png"
   );
 
-  const pStats = document.createElement("pStats");
+  const pStats = document.createElement("div");
   pStats.setAttribute("style", "color:#ffffff; font-size: 2em; position:fixed");
+  pStats.className = "pstats";
   updatePStats({ life: gameWorld.player().lifePoints(), points: 0 });
 
-  let gameStarted = false;
+  const questionDiv = document.createElement("questionDiv");
+  questionDiv.className = "question-div";
+  questionDiv.setAttribute(
+    "style",
+    "color:#ffffff; font-size: 2em; position:fixed"
+  );
+
+  questionDiv.innerHTML = "Question div";
+
+  let gameRunning = false;
 
   ////////////////////
   //// INITIALIZE ////
@@ -234,7 +255,7 @@ window.addEventListener("load", async () => {
   resize();
 
   window.addEventListener("keypress", e => {
-    if (gameStarted) {
+    if (gameRunning) {
       if (e.key == "p") {
         if (engine.isRunning()) {
           engine.stop();
