@@ -31,6 +31,16 @@
         "destinationZone": "23",
         "destinationX": 0,
         "destinationY": -1
+      },
+
+      {
+        "x": 0,
+        "y": 192,
+        "width": 192,
+        "height": 16,
+        "destinationZone": "32a",
+        "destinationX": -1,
+        "destinationY": 0
       }
 
     ],
