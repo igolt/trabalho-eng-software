@@ -23,6 +23,7 @@ window.addEventListener("load", async () => {
       gameWorld.setup(zone);
       gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
       gameWorld.addCollectibleEventListener(coffeeCollisionListener);
+      gameWorld.addEnemyCollisionEventListener(enemyCollisionEventListener);
 
       gameWorld.loadSprites().then(() => {
         document.body.appendChild(pStats);
@@ -90,6 +91,23 @@ window.addEventListener("load", async () => {
       frame.height
     );
 
+    for (let index = gameWorld.enemies().length - 1; index > -1; --index) {
+      const enemy = gameWorld.enemies()[index];
+      const frame = enemy.frame();
+
+      display.drawObject(
+        enemy.spriteSheet(),
+        frame.x,
+        frame.y,
+        enemy.getX() +
+          Math.floor(enemy.width() * 0.5 - frame.width * 0.5) +
+          frame.offsetX,
+        enemy.getY() + frame.offsetY,
+        frame.width,
+        frame.height
+      );
+    }
+
     for (let index = gameWorld.grass().length - 1; index > -1; --index) {
       const grass = gameWorld.grass()[index];
       const frame = grass.frame();
@@ -138,6 +156,26 @@ window.addEventListener("load", async () => {
     if (door.destinationY != -1) {
       gameWorld.player().setCenterY(door.destinationY);
       gameWorld.player().setOldCenterY(door.destinationY);
+    }
+  };
+
+  const endGame = () => {
+    engine.stop();
+    const endSound = assetsManager.loadAudio(
+      "end-game-sound",
+      "/audio/end-game.mp3"
+    );
+    endSound.onended = () => location.reload();
+    endSound.volume = 0.3;
+    endSound.load();
+    endSound.play();
+  };
+
+  const enemyCollisionEventListener = () => {
+    gameWorld.player().dealDamage(1);
+
+    if (gameWorld.player().lifePoints() == 0) {
+      endGame();
     }
   };
 

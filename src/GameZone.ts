@@ -18,6 +18,7 @@ export interface ITileSet extends ITileSetBase {
 type CoffeeInfo = [number, number];
 type GrassInfo = [number, number];
 type AppleInfo = [number, number];
+type EnemyInfo = [number, number];
 
 type DoorInfo = {
   x: number;
@@ -53,11 +54,13 @@ export interface IZone extends IZoneBase {
   tileSet: ITileSet;
   loadSprite: () => Promise<void>;
   tileSetImage(): HTMLImageElement;
+  enemies: EnemyInfo[];
 }
 
 interface IZoneInfoBase extends IZoneBase {
   tileSet: ITileSetInfo;
   apples?: AppleInfo[];
+  enemies?: EnemyInfo[];
 }
 
 type ZoneInfoWithCollisionMap = IZoneInfoBase & {
@@ -117,6 +120,7 @@ const zoneInfoToZone = (
     loadSprite: () => spriteSheet.load(),
     tileSetImage: () => spriteSheet.image(),
     apples: zoneInfo.apples ?? [],
+    enemies: zoneInfo.enemies ?? [],
     tileSet: {
       ...zone.tileSet,
       spriteSheet: spriteSheet,

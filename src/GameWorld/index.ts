@@ -10,9 +10,11 @@ import { GameWorldNoZoneLoadedException } from "./GameWorldNoZoneException";
 import { Collectible } from "src/Collectible";
 import { Apple } from "../Apple";
 import { SpriteSheet } from "../SpriteSheet";
+import { Enemy } from "../Enemy";
 
 type DoorCollisionListener = (door: Door) => void;
 type CollectibleCollisionListener = (collectible: Collectible) => void;
+type EnemyCollisionListener = (enemy: Enemy) => void;
 
 export class GameWorld {
   private friction: number;
@@ -21,6 +23,7 @@ export class GameWorld {
   private _collectibles: Collectible[];
   private _collectiblesCount: number;
   private _grass: Grass[];
+  private _enemies: Enemy[];
   private doors: Door[];
   private zone?: IZone;
   private tileSet: ITileSet;
@@ -32,7 +35,8 @@ export class GameWorld {
   private _columns: number;
   private _rows: number;
   private doorListeners: DoorCollisionListener[];
-  private collectiblesEventListener: CollectibleCollisionListener[];
+  private enemyEventListeners: EnemyCollisionListener[];
+  private collectiblesEventListeners: CollectibleCollisionListener[];
   private collectibleState: Map<string, Collectible[]>;
 
   public collectibleCount(): number {
@@ -60,7 +64,6 @@ export class GameWorld {
       rows: 8,
       tileSize: 16,
     };
-    // WARN(igolt): valores chutados, depois verificar isso aqui
     this._player = new GamePlayer(32, 76, assetsManager);
 
     this._collectibles = [];
@@ -68,13 +71,15 @@ export class GameWorld {
     this.doors = [];
 
     this._grass = [];
+    this._enemies = [];
 
     this._height = this.tileSet.tileSize * this._rows;
     this._width = this.tileSet.tileSize * this._columns;
 
     this.collectibleState = new Map<string, Collectible[]>();
     this.doorListeners = [];
-    this.collectiblesEventListener = [];
+    this.enemyEventListeners = [];
+    this.collectiblesEventListeners = [];
   }
 
   public tileSize(): number {
@@ -87,6 +92,7 @@ export class GameWorld {
     }
     this.doors = [];
     this._grass = [];
+    this._enemies = [];
     this.zone = zone;
     this._columns = zone.columns;
     this._rows = zone.rows;
@@ -108,16 +114,27 @@ export class GameWorld {
         );
       });
 
-      zone.apples.forEach(coffeeInfo => {
+      zone.apples.forEach(appleInfo => {
         this._collectibles.push(
           new Apple(
-            coffeeInfo[0] * this.tileSize() + 5,
-            coffeeInfo[1] * this.tileSize() - 2,
+            appleInfo[0] * this.tileSize() + 5,
+            appleInfo[1] * this.tileSize() - 2,
             this.assetsManager
           )
         );
       });
     }
+
+    zone.enemies.forEach(enemyInfo => {
+      this._enemies.push(
+        new Enemy(
+          enemyInfo[0] * this.tileSize() + 5,
+          enemyInfo[1] * this.tileSize() - 2,
+          this._player,
+          this.assetsManager
+        )
+      );
+    });
 
     zone.doors.forEach(doorInfo => {
       this.doors.push(
@@ -230,6 +247,18 @@ export class GameWorld {
       }
     }
 
+    for (let index = this._enemies.length - 1; index > -1; --index) {
+      const enemy = this._enemies[index];
+
+      enemy.updatePosition(this.gravity, this.friction);
+      enemy.updateAnimation();
+      this.collideObject(enemy);
+
+      if (enemy.collideObject(this._player)) {
+        this.emitEnemyCollisionEvent(enemy);
+      }
+    }
+
     for (let index = this._grass.length - 1; index > -1; --index) {
       const grass = this._grass[index];
 
@@ -289,12 +318,20 @@ export class GameWorld {
     return this._grass;
   }
 
+  public enemies() {
+    return this._enemies;
+  }
+
   public addDoorCollisionEventListener(listener: DoorCollisionListener) {
     this.doorListeners.push(listener);
   }
 
+  public addEnemyCollisionEventListener(listener: EnemyCollisionListener) {
+    this.enemyEventListeners.push(listener);
+  }
+
   public addCollectibleEventListener(listener: CollectibleCollisionListener) {
-    this.collectiblesEventListener.push(listener);
+    this.collectiblesEventListeners.push(listener);
   }
 
   private emitDoorCollisionEvent(door: Door) {
@@ -302,7 +339,11 @@ export class GameWorld {
   }
 
   private emitCollectibleCollisionEvent(collectible: Collectible) {
-    this.collectiblesEventListener.forEach(listener => listener(collectible));
+    this.collectiblesEventListeners.forEach(listener => listener(collectible));
+  }
+
+  private emitEnemyCollisionEvent(enemy: Enemy) {
+    this.enemyEventListeners.forEach(listener => listener(enemy));
   }
 
   public async loadSprites() {
@@ -311,6 +352,7 @@ export class GameWorld {
     }
     this._collectibles.forEach(async c => await c.loadSprite());
     this._grass.forEach(async grass => await grass.loadSprite());
+    this._enemies.forEach(async enemy => await enemy.loadSprite());
     await this.player().loadSprite();
   }
 

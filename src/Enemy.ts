@@ -7,13 +7,14 @@ import {
 import { AssetsManager } from "./AssetsManager";
 import { Frame } from "./Frame";
 import { MovableGameObject } from "./MovableGameObject";
+import { GameObject } from "./GameObject";
 
-enum PlayerDirection {
+enum EnemyDirection {
   Left,
   Right,
 }
 
-const playerFrameSet = {
+const enemyFrameSet = {
   "idle-left": [0],
   "jump-left": [1],
   "move-left": [2, 3, 4, 5],
@@ -22,7 +23,7 @@ const playerFrameSet = {
   "move-right": [8, 9, 10, 11],
 };
 
-const playerFrames = [
+const enemyFrames = [
   new Frame(115, 96, 13, 16, 0, -4), // idle-left
   new Frame(50, 96, 13, 16, 0, -4), // jump-left
   new Frame(102, 96, 13, 16, 0, -4), // walk-left
@@ -37,36 +38,41 @@ const playerFrames = [
   new Frame(52, 112, 13, 16, 0, -4), // walk-right
 ];
 
-const playerDx = 0.55;
-const playerMoveAnimationDelay = 5;
+const enemyDx = 0.35;
+const enemyMoveAnimationDelay = 5;
 
-export class GamePlayer extends MovableGameObject implements IGameAnimation {
+export class Enemy extends MovableGameObject implements IGameAnimation {
   private animation: GameAnimation;
-  private directionX: PlayerDirection;
-  private _lifePoints: number;
-  public static readonly MAX_LIFE = 5;
+  private directionX: EnemyDirection;
+  private target: GameObject;
   public static readonly SPRITE_KEY = "game-player";
   public static readonly SPRITE_URL = "sprite_sheets/tileset3.png";
 
-  public constructor(x: number, y: number, assetsManager: AssetsManager) {
+  public constructor(
+    x: number,
+    y: number,
+    target: GameObject,
+    assetsManager: AssetsManager
+  ) {
     super(x, y, 7, 12);
 
     this.animation = new GameAnimation(
-      playerFrames,
-      playerFrameSet["idle-left"],
+      enemyFrames,
+      enemyFrameSet["idle-left"],
       10,
       assetsManager,
       {
-        key: GamePlayer.SPRITE_KEY,
-        url: GamePlayer.SPRITE_URL,
+        key: Enemy.SPRITE_KEY,
+        url: Enemy.SPRITE_URL,
       }
     );
 
-    this._lifePoints = GamePlayer.MAX_LIFE;
+    this.target = target;
+
     this.setJumping(true);
     this.setVelocityX(0);
     this.setVelocityY(0);
-    this.directionX = PlayerDirection.Left;
+    this.directionX = EnemyDirection.Left;
   }
 
   public frame() {
@@ -106,47 +112,48 @@ export class GamePlayer extends MovableGameObject implements IGameAnimation {
   }
 
   public moveLeft() {
-    this.directionX = PlayerDirection.Left;
-    this.setVelocityX(this.velocityX() - playerDx);
+    this.directionX = EnemyDirection.Left;
+    this.setVelocityX(this.velocityX() - enemyDx);
   }
 
   public moveRight() {
-    this.directionX = PlayerDirection.Right;
-    this.setVelocityX(this.velocityX() + playerDx);
+    this.directionX = EnemyDirection.Right;
+    this.setVelocityX(this.velocityX() + enemyDx);
   }
 
   public updateAnimation() {
     if (this.velocityY() < 0) {
-      if (this.directionX == PlayerDirection.Left) {
-        this.changeFrameSet(playerFrameSet["jump-left"], "pause");
+      if (this.directionX == EnemyDirection.Left) {
+        this.changeFrameSet(enemyFrameSet["jump-left"], "pause");
       } else {
-        this.changeFrameSet(playerFrameSet["jump-right"], "pause");
+        this.changeFrameSet(enemyFrameSet["jump-right"], "pause");
       }
-    } else if (this.directionX == PlayerDirection.Left) {
+    } else if (this.directionX == EnemyDirection.Left) {
       if (this.velocityX() < -0.1) {
         this.changeFrameSet(
-          playerFrameSet["move-left"],
+          enemyFrameSet["move-left"],
           "loop",
-          playerMoveAnimationDelay
+          enemyMoveAnimationDelay
         );
       } else {
-        this.changeFrameSet(playerFrameSet["idle-left"], "pause");
+        this.changeFrameSet(enemyFrameSet["idle-left"], "pause");
       }
-    } else if (this.directionX == PlayerDirection.Right) {
+    } else if (this.directionX == EnemyDirection.Right) {
       if (this.velocityX() > 0.1) {
         this.changeFrameSet(
-          playerFrameSet["move-right"],
+          enemyFrameSet["move-right"],
           "loop",
-          playerMoveAnimationDelay
+          enemyMoveAnimationDelay
         );
       } else {
-        this.changeFrameSet(playerFrameSet["idle-right"], "pause");
+        this.changeFrameSet(enemyFrameSet["idle-right"], "pause");
       }
     }
     this.animate();
   }
 
   public updatePosition(gravity: number, friction: number) {
+    this._update();
     this.setXOld(this.getX());
     this.setYOld(this.getY());
 
@@ -165,11 +172,20 @@ export class GamePlayer extends MovableGameObject implements IGameAnimation {
     this.setY(this.getY() + this.velocityY());
   }
 
-  public lifePoints(): number {
-    return this._lifePoints;
-  }
-
-  public dealDamage(damage: number) {
-    this._lifePoints -= damage > this._lifePoints ? this._lifePoints : damage;
+  private _update(): void {
+    if (
+      Math.sqrt(
+        (this.target.getX() - this.getX()) * (this.target.getX() - this.getX())
+      ) +
+        (this.target.getY() - this.getY()) *
+          (this.target.getY() - this.getY()) <=
+      700
+    ) {
+      if (this.target.getX() <= this.getX()) {
+        this.moveLeft();
+      } else {
+        this.moveRight();
+      }
+    }
   }
 }
