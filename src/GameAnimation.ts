@@ -1,10 +1,9 @@
 import { AssetsManager } from "./AssetsManager";
+import { SpriteSheet, Sprite } from "./SpriteSheet";
 import { Frame } from "./Frame";
 
 export type AnimationMode = "loop" | "pause";
 export type FrameSet = number[];
-
-export type SpriteSheet = HTMLImageElement | { key: string; url: string };
 
 export interface IGameAnimation {
   frame: () => Frame;
@@ -20,9 +19,6 @@ export interface IGameAnimation {
   loadSprite: () => Promise<void>;
 }
 
-const isImage = (obj: unknown): obj is HTMLImageElement =>
-  obj instanceof HTMLImageElement;
-
 export class GameAnimation implements IGameAnimation {
   private _frames: Frame[];
   private count: number;
@@ -32,29 +28,19 @@ export class GameAnimation implements IGameAnimation {
   private frameIndex: number;
   private _frameValue: number;
   private mode: AnimationMode;
-  private assetsManager: AssetsManager;
 
   public constructor(
     frames: Frame[],
     frameSet: FrameSet,
     delay: number,
     assetsManager: AssetsManager,
-    spriteSheet: SpriteSheet,
+    sprite: Sprite,
     mode?: AnimationMode,
     frameIndex?: number
   ) {
-    if (!isImage(spriteSheet)) {
-      if (assetsManager.imageIsLoaded(spriteSheet.key)) {
-        this._spriteSheet = assetsManager.getImage(spriteSheet.key);
-      } else {
-        this._spriteSheet = spriteSheet;
-      }
-    } else {
-      this._spriteSheet = spriteSheet;
-    }
+    this._spriteSheet = new SpriteSheet(assetsManager, sprite);
 
     this._frames = frames;
-    this.assetsManager = assetsManager;
     this.count = 0;
     this.delay = delay >= 1 ? delay : 1;
     this.frameSet = frameSet;
@@ -85,19 +71,11 @@ export class GameAnimation implements IGameAnimation {
   }
 
   public async loadSprite() {
-    if (!isImage(this._spriteSheet)) {
-      this._spriteSheet = await this.assetsManager.getOrLoadImage(
-        this._spriteSheet.key,
-        this._spriteSheet.url
-      );
-    }
+    await this._spriteSheet.load();
   }
 
   public spriteSheet() {
-    if (isImage(this._spriteSheet)) {
-      return this._spriteSheet;
-    }
-    throw new Error("Animation::spriteSheet: spritesheet not loaded");
+    return this._spriteSheet.image();
   }
 
   public changeFrameSet(

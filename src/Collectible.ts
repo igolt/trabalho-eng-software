@@ -5,9 +5,9 @@ import {
   FrameSet,
   GameAnimation,
   IGameAnimation,
-  SpriteSheet,
 } from "./GameAnimation";
 import { GameObject } from "./GameObject";
+import { Sprite } from "./SpriteSheet";
 
 export abstract class Collectible extends GameObject implements IGameAnimation {
   private animation: GameAnimation;
@@ -26,7 +26,7 @@ export abstract class Collectible extends GameObject implements IGameAnimation {
     frames: Frame[],
     frameSet: FrameSet,
     delay: number,
-    spriteSheet: SpriteSheet,
+    spriteSheet: Sprite,
     assetsManager: AssetsManager
   ) {
     super(x, y, width, height);

@@ -1,11 +1,18 @@
 import { AssetsManager } from "./AssetsManager";
-import { SpriteSheet } from "./GameAnimation";
+import { Sprite, SpriteSheet } from "./SpriteSheet";
 
-export interface ITileSet {
-  spriteSheet: SpriteSheet;
+interface ITileSetBase {
   columns: number;
   rows: number;
   tileSize: number;
+}
+
+interface ITileSetInfo extends ITileSetBase {
+  spriteSheet: Sprite;
+}
+
+export interface ITileSet extends ITileSetBase {
+  spriteSheet: SpriteSheet;
 }
 
 type CoffeeInfo = [number, number];
@@ -33,12 +40,9 @@ interface IZoneBase {
   columns: number;
   rows: number;
 
-  tileSet: ITileSet;
   coffees: CoffeeInfo[];
   grass: GrassInfo[];
   doors: DoorInfo[];
-
-  tileSetImage(): HTMLImageElement;
 }
 
 export interface IZone extends IZoneBase {
@@ -46,10 +50,13 @@ export interface IZone extends IZoneBase {
   assetsManager: AssetsManager;
   graphicalMap: GraphicalMap;
   collisionMap: CollisionMap;
+  tileSet: ITileSet;
   loadSprite: () => Promise<void>;
+  tileSetImage(): HTMLImageElement;
 }
 
 interface IZoneInfoBase extends IZoneBase {
+  tileSet: ITileSetInfo;
   apples?: AppleInfo[];
 }
 
@@ -63,9 +70,6 @@ type ZoneInfoWithoutCollisionMap = IZoneInfoBase & {
 };
 
 type ZoneInfo = ZoneInfoWithCollisionMap | ZoneInfoWithoutCollisionMap;
-
-const isImage = (obj: unknown): obj is HTMLImageElement =>
-  obj instanceof HTMLImageElement;
 
 const ZONE_PREFIX = "../zones/zone";
 const ZONE_SUFFIX = ".json";
@@ -105,24 +109,18 @@ const zoneInfoToZone = (
     ? zoneInfo
     : parseGraphicalAndCollisionMap(zoneInfo);
 
+  const spriteSheet = new SpriteSheet(assetsManager, zone.tileSet.spriteSheet);
+
   return {
     ...zone,
     assetsManager: assetsManager,
-    loadSprite: async () => {
-      if (!isImage(zone.tileSet.spriteSheet)) {
-        zone.tileSet.spriteSheet = await assetsManager.getOrLoadImage(
-          zone.tileSet.spriteSheet.key,
-          zone.tileSet.spriteSheet.url
-        );
-      }
-    },
-    tileSetImage: () => {
-      if (isImage(zone.tileSet.spriteSheet)) {
-        return zone.tileSet.spriteSheet;
-      }
-      throw new Error("Zone::tileSetImage: spritesheet not loaded");
-    },
+    loadSprite: () => spriteSheet.load(),
+    tileSetImage: () => spriteSheet.image(),
     apples: zoneInfo.apples ?? [],
+    tileSet: {
+      ...zone.tileSet,
+      spriteSheet: spriteSheet,
+    },
   };
 };
 

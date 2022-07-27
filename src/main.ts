@@ -125,8 +125,8 @@ window.addEventListener("load", async () => {
   };
 
   const update = () => {
-    playerController();
     gameWorld.update();
+    playerController();
   };
 
   const movePlayerToDoorDestination = (door: Door) => {

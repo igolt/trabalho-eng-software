@@ -9,19 +9,10 @@ import { AssetsManager } from "../AssetsManager";
 import { GameWorldNoZoneLoadedException } from "./GameWorldNoZoneException";
 import { Collectible } from "src/Collectible";
 import { Apple } from "../Apple";
+import { SpriteSheet } from "../SpriteSheet";
 
 type DoorCollisionListener = (door: Door) => void;
 type CollectibleCollisionListener = (collectible: Collectible) => void;
-
-const menuTileSet = {
-  spriteSheet: {
-    key: "-",
-    url: "-",
-  },
-  columns: 8,
-  rows: 8,
-  tileSize: 16,
-};
 
 export class GameWorld {
   private friction: number;
@@ -60,7 +51,15 @@ export class GameWorld {
     this._columns = 12;
     this._rows = 9;
 
-    this.tileSet = menuTileSet;
+    this.tileSet = {
+      spriteSheet: new SpriteSheet(assetsManager, {
+        key: "-",
+        url: "-",
+      }),
+      columns: 8,
+      rows: 8,
+      tileSize: 16,
+    };
     // WARN(igolt): valores chutados, depois verificar isso aqui
     this._player = new GamePlayer(32, 76, assetsManager);
 
