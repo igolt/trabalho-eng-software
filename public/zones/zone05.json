@@ -21,6 +21,16 @@
         "destinationZone": "15",
         "destinationX": -1,
         "destinationY": 0
+      },
+
+      {
+        "x":192,
+        "y":16,
+        "width":16,
+        "height":16,
+        "destinationZone":"05Boss",
+        "destinationX":0,
+        "destinationY":-1
       }
 
     ],
