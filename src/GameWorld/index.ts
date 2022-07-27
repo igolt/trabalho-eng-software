@@ -38,6 +38,7 @@ export class GameWorld {
   private enemyEventListeners: EnemyCollisionListener[];
   private collectiblesEventListeners: CollectibleCollisionListener[];
   private collectibleState: Map<string, Collectible[]>;
+  private lastCollionTime: number;
 
   public collectibleCount(): number {
     return this._collectiblesCount;
@@ -80,6 +81,7 @@ export class GameWorld {
     this.doorListeners = [];
     this.enemyEventListeners = [];
     this.collectiblesEventListeners = [];
+    this.lastCollionTime = 0;
   }
 
   public tileSize(): number {
@@ -221,7 +223,7 @@ export class GameWorld {
     );
   }
 
-  public update() {
+  public update(dt: number) {
     this._player.updatePosition(this.gravity, this.friction);
 
     this.collideObject(this._player);
@@ -254,8 +256,11 @@ export class GameWorld {
       enemy.updateAnimation();
       this.collideObject(enemy);
 
-      if (enemy.collideObject(this._player)) {
-        this.emitEnemyCollisionEvent(enemy);
+      if (dt - this.lastCollionTime > 1000) {
+        if (enemy.collideObject(this._player)) {
+          this.emitEnemyCollisionEvent(enemy);
+          this.lastCollionTime = dt;
+        }
       }
     }
 
