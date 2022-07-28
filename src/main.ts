@@ -9,7 +9,7 @@ import { AssetsManager } from "./AssetsManager";
 window.addEventListener("load", async () => {
   //// CONSTANTS ////
 
-  const INITIAL_ZONE_ID = "00";
+  const INITIAL_ZONE_ID = "04";
 
   ///////////////////
   //// FUNCTIONS ////
@@ -28,6 +28,17 @@ window.addEventListener("load", async () => {
     pStats.innerHTML = "Points: " + newPoints + "<br>Life: " + newLife;
   };
 
+  const updateQuestionDiv = () => {
+    const question = gameWorld.zoneQuestion();
+
+    if (question) {
+      questionDiv.hidden = false;
+      questionDiv.innerHTML = question;
+    } else {
+      questionDiv.hidden = true;
+    }
+  };
+
   const startGame = () => {
     gameRunning = true;
     requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
@@ -39,6 +50,7 @@ window.addEventListener("load", async () => {
       gameWorld.loadSprites().then(() => {
         document.body.appendChild(pStats);
         document.body.appendChild(questionDiv);
+        updateQuestionDiv();
         resize();
         engine.start();
       });
@@ -55,15 +67,19 @@ window.addEventListener("load", async () => {
 
     const rectangle = display.getBoundingClientRect();
 
+    pStats.style.height = rectangle.height * 0.1 + "px";
     pStats.style.left = rectangle.left + "px";
     pStats.style.top = rectangle.top + "px";
     pStats.style.fontSize =
-      (gameWorld.tileSize() * rectangle.height) / gameWorld.height() + "px";
+      (gameWorld.tileSize() * rectangle.height) / gameWorld.height() / 3 + "px";
 
+    questionDiv.style.height = rectangle.height * 0.1 + "px";
+    questionDiv.style.width = rectangle.width - 2 + "px";
     questionDiv.style.left = rectangle.left + "px";
+    questionDiv.style.right = rectangle.right + "px";
     questionDiv.style.bottom = rectangle.top + "px";
     questionDiv.style.fontSize =
-      (gameWorld.tileSize() * rectangle.height) / gameWorld.height() + "px";
+      (gameWorld.tileSize() * rectangle.height) / gameWorld.height() / 4 + "px";
   };
 
   const render = () => {
@@ -204,6 +220,7 @@ window.addEventListener("load", async () => {
 
         gameWorld.loadSprites().then(() => {
           movePlayerToDoorDestination(door);
+          updateQuestionDiv();
 
           engine.start();
         });
@@ -238,6 +255,7 @@ window.addEventListener("load", async () => {
   );
 
   questionDiv.innerHTML = "Question div";
+  questionDiv.hidden = true;
 
   let gameRunning = false;
 

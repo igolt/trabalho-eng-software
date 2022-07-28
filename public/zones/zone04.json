@@ -13,6 +13,8 @@
     "coffees":[],
     "grass"  :[[1,4], [2,4], [3,4], [9,5], [10,5], [2,7], [3,7], [4,7], [6,7], [7,7]],
 
+  "question": "A sobrescrita permite que, em uma mesma classe, tenhamos vários métodos com o mesmo nome, mas com assinatura diferente." ,
+
     "doors" : [
         {
             "x":-16,

@@ -367,4 +367,8 @@ export class GameWorld {
     }
     throw new GameWorldNoZoneLoadedException("tileSetImage");
   }
+
+  public zoneQuestion() {
+    return this.zone?.question;
+  }
 }

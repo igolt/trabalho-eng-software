@@ -47,6 +47,7 @@ interface IZoneBase {
 }
 
 export interface IZone extends IZoneBase {
+  question?: string;
   apples: AppleInfo[];
   assetsManager: AssetsManager;
   graphicalMap: GraphicalMap;
