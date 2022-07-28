@@ -12,6 +12,8 @@
     "keys": [[6,5]],
     "coffees":[],
     "grass"  :[],
+  "question": "Qual dos citados quase sempre violam o princípio de encapsulamento?<br>a: Variáveis globais, b: Variáveis locais, c: Variáveis públicas",
+      "c": "Variáveis públicas",
 
     "doors":[
       { "x": 192,

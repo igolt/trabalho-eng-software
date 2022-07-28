@@ -65,7 +65,7 @@ export class GameWorld {
       rows: 8,
       tileSize: 16,
     };
-    this._player = new GamePlayer(32, 76, assetsManager);
+    this._player = new GamePlayer(32, 50, assetsManager);
 
     this._collectibles = [];
     this._collectiblesCount = 0;

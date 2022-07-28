@@ -11,6 +11,8 @@
       "tileSize": 16
     },
 
+  "question": "O mecanismo de derivar uma classe de outra classe derivada é chamada de Polimorfismo.",
+
     "coffees": [],
     "grass" : [],
     "doors" : [

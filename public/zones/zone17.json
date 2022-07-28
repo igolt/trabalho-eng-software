@@ -11,6 +11,7 @@
       "tileSize": 16
     },
 
+  "question": "Se uma classe C é derivada da classe B, que é derivada da classe A, tudo através de herança pública, então um membro da classe C consegue acessar dados protegidos de A e B.",
     "coffees": [],
     "grass" : [],
     "doors" : [

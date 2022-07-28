@@ -10,7 +10,8 @@
       "tileSize": 16
     },
 
-    "keys": [[1,7, "key33.1"], [10,7, "key33.2"]],
+  "question": "O processo de construir novas classes a partir de uma já existente é chamada de Template.",
+    "keys": [[1,7, "key33.1"], [10,7, "05BossKey"]],
     "coffees":[],
     "grass"  :[],
 

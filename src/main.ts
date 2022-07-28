@@ -292,6 +292,12 @@ window.addEventListener("load", async () => {
         } else {
           engine.start();
         }
+      } else if (e.key == "+") {
+        gameWorld.player().dealDamage(-1);
+        updatePStats({});
+      } else if (e.key == "-") {
+        gameWorld.player().dealDamage(1);
+        updatePStats({});
       }
     } else {
       if (e.key == " ") {
