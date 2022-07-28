@@ -38,7 +38,8 @@
     },
     {
       "question": "Membros estáticos só podem ser utilizadas em funções estáticas.",
-      "answer": "V"
+      "answer": "V",
+      "type": "Polimorfismo"
     },
     {
       "question": "Os membros de uma classe, por definição, são definidos como públicos",
@@ -59,6 +60,21 @@
     {
       "question": "O método de esconder detalhes desnecessários de implementação é chamado de Abstração.",
       "answer": "V"
+    },
+    {
+      "question": "Os membros privados de uma classe base são visíveis na classe derivada, porém não podem ser acessadas diretamente",
+      "answer": "V",
+      "type": "Herança"
+    },
+    {
+      "question": "Membros de funções estáticas não podem ser utilizadas no polimorfismo",
+      "answer": "V",
+      "type": "Polimorfismo"
+    },
+    {
+      "question": "Usar apenas membros privados nos leva ao encapsulamento",
+      "answer": "F",
+      "type": "Encapsulamento"
     }
   ]
 }

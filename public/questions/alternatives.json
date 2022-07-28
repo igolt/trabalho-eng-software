@@ -6,7 +6,80 @@
       "b" : "Herança, Polimorfismo, Classes, Objetos",
       "c" : "Classes, Atributos, Métodos, Abstração",
       "d" : "Abstração, Encapsulamento, Herança, Polimorfismo",
-      "answer": "D"
+      "answer": "D",
+      "type": "Geral"
+    },
+    {
+      "question": "Qual tipo de acesso é derivada como membro privado numa classe derivada?",
+      "a": "Private",
+      "b": "Public",
+      "c": "Protected",
+      "d": "Private e Protected",
+      "answer" : "A",
+      "type": "Herança"
+    },
+    {
+      "question": "Membros que não possuem intenção de serem herdados são declarados como:",
+      "a": "Public",
+      "b": "Protected",
+      "c": "Private",
+      "d": "Private ou Protected",
+      "answer": "C",
+      "type": "Herança"
+    },
+    {
+      "question": "Se um objeto de classe derivada é criado, qual construtor é chamado primeiro?",
+      "a": "Construtor da classe base",
+      "b": "Construtor da classe derivada",
+      "c": "Depende de como o objeto é chamado",
+      "d": "Não é possível",
+      "answer": "A",
+      "type": "Herança"
+    },
+    {
+      "question": "Qual alternativa melhor define Abstração?",
+      "a": "Esconder a implementação",
+      "b": "Mostrar a informação importante",
+      "c": "Esconder a informação importante",
+      "d": "Esconder a implementação e mostrar apenas o conteúdo",
+      "answer": "D",
+      "type": "Abstração"
+    },
+    {
+      "question": "O princípio da abstração inclui:",
+      "a": "Usar o mínimo de abstração",
+      "b": "Usar abstração para evitar códigos longos",
+      "c": "Usar abstração sempre que possível para evitar duplicação",
+      "d": "Usar abstração sempre que possível para encontrar a Orientação a Objetos",
+      "answer": "C",
+      "type": "Abstração"
+    },
+    {
+      "question": "Usar alto nível de abstração pode:",
+      "a": "Diminuir a segurança",
+      "b": "Diminuir a facilidade de leitura",
+      "c": "Aumentar a segurança",
+      "d": "Aumentar a vulnerabilidade",
+      "answer": "C",
+      "type": "Abstração"
+    },
+    {
+      "question": "Se atributos são privados, o que pode ser feito para acessá-los?",
+      "a": "Criar métodos públicos para acessar os métodos",
+      "b": "Criar métodos privados para acessar os métodos",
+      "c": "Criar métodos protegidos para acessar os métodos",
+      "d": "Membros privados nunca poderão ser acessados por fora da classe",
+      "answer": "A",
+      "type": "Encapsulamento"
+    },
+    {
+      "question": "Qual dos citados quase sempre violam o princípio de encapsulamento?",
+      "a": "Variáveis locais",
+      "b": "Variáveis globais",
+      "c": "Variáveis públicas",
+      "d": "Variáveis Vetores",
+      "answer": "B",
+      "type": "Encapsulamento"
     }
   ]
 }
