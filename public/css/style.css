@@ -29,23 +29,24 @@ canvas {
   font-family: 'Press Start 2P', cursive;
   width: 11.8em;
   height: 1.5em;
-  text-align: center;
+  text-align: left;
   margin: 0.1em;
-  padding: 0.1em;
+  padding: 0.2em;
   border: 0.1em inset #ffffff;
   background-color: #202830;
-  opacity: 0.5;
+  opacity: 0.9;
 }
 
 .question-div {
   font-family: 'Press Start 2P', cursive;
-  width: 11.8em;
+  width: 100%;
   height: 1.5em;
-  text-align: center;
+  text-align: left;
   margin: 0.1em;
   padding: 0.1em;
   border: 0.1em inset #ffffff;
   bottom: 1px;
   background-color: #202830;
-  opacity: 0.5;
+  font-size: 0.4px;
+  opacity: 0.9;
 }

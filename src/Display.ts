@@ -77,7 +77,6 @@ export class Display {
       this.context.canvas.height = height;
       this.context.canvas.width = height / heightWidthRatio;
     }
-
     this.context.imageSmoothingEnabled = false;
   }
 
@@ -123,5 +122,9 @@ export class Display {
       this.buffer.canvas.width,
       this.buffer.canvas.height
     );
+  }
+
+  public canvas(): HTMLCanvasElement {
+    return this.context.canvas;
   }
 }
