@@ -44,6 +44,7 @@ export class GamePlayer extends MovableGameObject implements IGameAnimation {
   private animation: GameAnimation;
   private directionX: PlayerDirection;
   private _lifePoints: number;
+  private keys: Map<string, boolean>;
   public static readonly MAX_LIFE = 5;
   public static readonly SPRITE_KEY = "game-player";
   public static readonly SPRITE_URL = "sprite_sheets/tileset3.png";
@@ -62,6 +63,7 @@ export class GamePlayer extends MovableGameObject implements IGameAnimation {
       }
     );
 
+    this.keys = new Map();
     this._lifePoints = GamePlayer.MAX_LIFE;
     this.setJumping(true);
     this.setVelocityX(0);
@@ -171,5 +173,13 @@ export class GamePlayer extends MovableGameObject implements IGameAnimation {
 
   public dealDamage(damage: number) {
     this._lifePoints -= damage > this._lifePoints ? this._lifePoints : damage;
+  }
+
+  public acquireKey(key: string) {
+    this.keys.set(key, true);
+  }
+
+  public hasKey(key: string) {
+    return this.keys.has(key);
   }
 }

@@ -11,7 +11,9 @@
     "tileSize": 16
   },
 
-  "apples": [[4,5]],
+  "question": "Classe encapsula dados para descrever o conteúdo de alguma entidade do mundo real.", 
+
+  "keys": [[4,5]],
   "coffees":[],
   "grass" : [],
   "doors" : [

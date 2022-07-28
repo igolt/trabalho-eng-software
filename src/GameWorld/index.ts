@@ -8,7 +8,7 @@ import { MovableGameObject } from "../MovableGameObject";
 import { AssetsManager } from "../AssetsManager";
 import { GameWorldNoZoneLoadedException } from "./GameWorldNoZoneException";
 import { Collectible } from "src/Collectible";
-import { Apple } from "../Apple";
+import { Key } from "../Key";
 import { SpriteSheet } from "../SpriteSheet";
 import { Enemy } from "../Enemy";
 
@@ -116,11 +116,12 @@ export class GameWorld {
         );
       });
 
-      zone.apples.forEach(appleInfo => {
+      zone.keys.forEach(keyInfo => {
         this._collectibles.push(
-          new Apple(
-            appleInfo[0] * this.tileSize() + 5,
-            appleInfo[1] * this.tileSize() - 2,
+          new Key(
+            keyInfo[0] * this.tileSize() + 5,
+            keyInfo[1] * this.tileSize() - 2,
+            keyInfo[2],
             this.assetsManager
           )
         );
@@ -147,7 +148,8 @@ export class GameWorld {
           doorInfo.height,
           doorInfo.destinationX,
           doorInfo.destinationY,
-          doorInfo.destinationZone
+          doorInfo.destinationZone,
+          doorInfo.lock
         )
       );
     });

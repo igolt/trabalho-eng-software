@@ -9,7 +9,7 @@
       "rows": 8,
       "tileSize": 16
     },
-    "apples": [[2,2]],
+    "keys": [[2,2]],
     "coffees":[],
     "grass"  :[],
 

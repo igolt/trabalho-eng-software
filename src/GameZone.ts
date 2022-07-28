@@ -17,7 +17,7 @@ export interface ITileSet extends ITileSetBase {
 
 type CoffeeInfo = [number, number];
 type GrassInfo = [number, number];
-type AppleInfo = [number, number];
+type KeyInfo = [number, number, string];
 type EnemyInfo = [number, number];
 
 type DoorInfo = {
@@ -30,6 +30,7 @@ type DoorInfo = {
   destinationZone: string;
   destinationX: number;
   destinationY: number;
+  lock?: string;
 };
 
 type GraphicalMap = number[];
@@ -48,7 +49,7 @@ interface IZoneBase {
 
 export interface IZone extends IZoneBase {
   question?: string;
-  apples: AppleInfo[];
+  keys: KeyInfo[];
   assetsManager: AssetsManager;
   graphicalMap: GraphicalMap;
   collisionMap: CollisionMap;
@@ -60,7 +61,7 @@ export interface IZone extends IZoneBase {
 
 interface IZoneInfoBase extends IZoneBase {
   tileSet: ITileSetInfo;
-  apples?: AppleInfo[];
+  keys?: KeyInfo[];
   enemies?: EnemyInfo[];
 }
 
@@ -120,7 +121,7 @@ const zoneInfoToZone = (
     assetsManager: assetsManager,
     loadSprite: () => spriteSheet.load(),
     tileSetImage: () => spriteSheet.image(),
-    apples: zoneInfo.apples ?? [],
+    keys: zoneInfo.keys ?? [],
     enemies: zoneInfo.enemies ?? [],
     tileSet: {
       ...zone.tileSet,

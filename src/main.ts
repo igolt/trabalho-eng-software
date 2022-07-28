@@ -5,11 +5,12 @@ import { Controller } from "./Controller";
 import { requestZoneFromJSON } from "./GameZone";
 import { Door } from "./Door";
 import { AssetsManager } from "./AssetsManager";
+import { Collectible } from "./Collectible";
+import { Key } from "./Key";
 
 window.addEventListener("load", async () => {
   //// CONSTANTS ////
-
-  const INITIAL_ZONE_ID = "04";
+  const INITIAL_ZONE_ID = "00";
 
   ///////////////////
   //// FUNCTIONS ////
@@ -44,7 +45,7 @@ window.addEventListener("load", async () => {
     requestZoneFromJSON(assetsManager, INITIAL_ZONE_ID).then(async zone => {
       gameWorld.setup(zone);
       gameWorld.addDoorCollisionEventListener(doorCollisionEventListener);
-      gameWorld.addCollectibleEventListener(coffeeCollisionListener);
+      gameWorld.addCollectibleEventListener(collectibleCollisionListener);
       gameWorld.addEnemyCollisionEventListener(enemyCollisionEventListener);
 
       gameWorld.loadSprites().then(() => {
@@ -159,7 +160,13 @@ window.addEventListener("load", async () => {
     display.render();
   };
 
-  const coffeeCollisionListener = () => updatePStats({});
+  const collectibleCollisionListener = (collectible: Collectible) => {
+    updatePStats({});
+
+    if (collectible instanceof Key) {
+      gameWorld.player().acquireKey(collectible.keyName());
+    }
+  };
 
   const playerController = () => {
     if (controller.left.isDown()) {
@@ -182,7 +189,7 @@ window.addEventListener("load", async () => {
   const movePlayerToDoorDestination = (door: Door) => {
     if (door.destinationX != -1) {
       gameWorld.player().setCenterX(door.destinationX);
-      gameWorld.player().setOldCenterX(door.destinationX); // It's important to reset the old position as well.
+      gameWorld.player().setOldCenterX(door.destinationX);
     }
 
     if (door.destinationY != -1) {
@@ -210,6 +217,11 @@ window.addEventListener("load", async () => {
   };
 
   const doorCollisionEventListener = (door: Door) => {
+    console.log(`door destination: ${door.destinationZone}`);
+    if (door.hasLock() && !gameWorld.player().hasKey(door.requiredKey())) {
+      return;
+    }
+
     if (door.destinationZone == gameWorld.zoneId()) {
       movePlayerToDoorDestination(door);
     } else {

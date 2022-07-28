@@ -10,7 +10,7 @@
       "tileSize": 16
     },
 
-    "apples": [[9,3]],
+    "keys": [[9,3], "key12"],
     "coffees":[],
     "grass"  :[],
 
