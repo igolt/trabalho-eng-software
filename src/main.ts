@@ -80,7 +80,7 @@ window.addEventListener("load", async () => {
     questionDiv.style.right = rectangle.right + "px";
     questionDiv.style.bottom = rectangle.top + "px";
     questionDiv.style.fontSize =
-      (gameWorld.tileSize() * rectangle.height) / gameWorld.height() / 4 + "px";
+      (gameWorld.tileSize() * rectangle.height) / gameWorld.height() / 5 + "px";
   };
 
   const render = () => {

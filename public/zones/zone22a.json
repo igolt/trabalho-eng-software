@@ -10,7 +10,8 @@
       "tileSize": 16
     },
 
-    "keys": [[5,5, "key22"]],
+  "question": "Qual tipo de acesso é derivada como membro privado numa classe derivada?<br><br>a: Private, b: Public, c: Protected, d: Private e Protected",
+
     "coffees":[],
     "grass"  :[],
 
