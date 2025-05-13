@@ -1,7 +1,7 @@
 export type TickEventListener = (timer: Timer) => void;
 
 export class Timer {
-  private interval?: NodeJS.Timer;
+  private interval?: NodeJS.Timeout;
   private timeOut: number;
   private _remainingTime: number;
   private tickEventListeners: TickEventListener[];
@@ -31,7 +31,7 @@ export class Timer {
   }
 
   public pause() {
-    if (!this.isPaused()) {
+    if (this.interval != undefined) {
       clearInterval(this.interval);
     }
   }
